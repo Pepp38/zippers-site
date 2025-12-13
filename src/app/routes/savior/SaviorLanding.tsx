@@ -4,7 +4,7 @@ import { SiteFooter } from '../../../components/layout/SiteFooter';
 import { Section } from '../../../components/layout/Section';
 
 export function SaviorLanding() {
-  const { hero, problem, features, howItWorks, install, demo, reliability, faq } = saviorContent;
+  const { hero, problem, features, howItWorks, install, demo, reliability, links, faq } = saviorContent;
 
   return (
     <>
@@ -134,6 +134,25 @@ export function SaviorLanding() {
               </a>
             ))}
           </div>
+        </Section>
+
+        <Section>
+          <h2 className="text-2xl font-semibold">{links.title}</h2>
+
+          <ul className="mt-4 space-y-3">
+            {links.items.map((item) => (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 underline-offset-4 hover:underline"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </Section>
 
         <Section id="faq">

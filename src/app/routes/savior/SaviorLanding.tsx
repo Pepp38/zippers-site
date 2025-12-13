@@ -4,14 +4,15 @@ import { SiteFooter } from '../../../components/layout/SiteFooter';
 import { Section } from '../../../components/layout/Section';
 
 export function SaviorLanding() {
-  const { hero, problem, features, howItWorks, install, demo, reliability, links, faq } = saviorContent;
+  const { hero, problem, features, howItWorks, install, demo, reliability, faq } = saviorContent;
 
   return (
     <>
       <SiteHeader />
 
       <main>
-        <Section>
+        <Section id="top">
+          
           <p className="text-sm opacity-70">Savior by Zippers</p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-tight">

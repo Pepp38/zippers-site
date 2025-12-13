@@ -35,7 +35,7 @@ export function SaviorLanding() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-              className="rounded-xl bg-black px-5 py-3 text-white"
+              className="rounded-xl px-5 py-3 text-white" style={{ backgroundColor: `rgb(var(--accent))` }}
               href={hero.ctaPrimary.href}
             >
               {hero.ctaPrimary.label}

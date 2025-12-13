@@ -10,12 +10,7 @@ export const saviorContent = {
 
   problem: {
     title: 'Built for the moments when things break',
-    bullets: [
-      'Accidental refresh',
-      'Closed tab',
-      'Browser crash',
-      'Unintended navigation',
-    ],
+    bullets: ['Accidental refresh', 'Closed tab', 'Browser crash', 'Unintended navigation'],
   },
 
   features: {
@@ -57,34 +52,28 @@ Savior.init({
       'Corrupted JSON protection',
       'Automated tests plus manual crash scenarios',
     ],
-    links: [
-      { label: 'Testing in the repo', href: 'https://github.com/Pepp38/Savior#testing' },
+    links: [{ label: 'Testing in the repo', href: 'https://github.com/Pepp38/Savior#testing' }],
+  },
+
+  links: {
+    title: 'Docs & Links',
+    items: [
+      { label: 'GitHub repository', href: 'https://github.com/Pepp38/Savior' },
+      { label: 'NPM package', href: 'https://www.npmjs.com/package/@zippers/savior' },
+      { label: 'Documentation', href: 'https://github.com/Pepp38/Savior#readme' },
+      { label: 'Issues', href: 'https://github.com/Pepp38/Savior/issues' },
+      { label: 'Discussions', href: 'https://github.com/Pepp38/Savior/discussions' },
     ],
   },
 
   faq: {
     title: 'FAQ',
     items: [
-      {
-        q: 'Does it require a backend?',
-        a: 'No. Savior is local-first and stores drafts in web storage by default.',
-      },
-      {
-        q: 'Can I use sessionStorage?',
-        a: 'Yes. Savior supports pluggable drivers, including sessionStorage.',
-      },
-      {
-        q: 'Does it work with frameworks?',
-        a: 'Yes. It is framework-agnostic as long as you target standard HTML forms.',
-      },
-      {
-        q: 'How do I avoid saving sensitive fields?',
-        a: 'Exclude fields (example: password) or filter by name/type based on your setup.',
-      },
-      {
-        q: 'What about multiple forms?',
-        a: 'Savior can handle multiple forms as long as your selector targets them properly.',
-      },
+      { q: 'Does it require a backend?', a: 'No. Savior is local-first and stores drafts in web storage by default.' },
+      { q: 'Can I use sessionStorage?', a: 'Yes. Savior supports pluggable drivers, including sessionStorage.' },
+      { q: 'Does it work with frameworks?', a: 'Yes. It is framework-agnostic as long as you target standard HTML forms.' },
+      { q: 'How do I avoid saving sensitive fields?', a: 'Exclude fields (example: password) or filter by name/type based on your setup.' },
+      { q: 'What about multiple forms?', a: 'Savior can handle multiple forms as long as your selector targets them properly.' },
     ],
   },
 };

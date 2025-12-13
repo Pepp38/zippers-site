@@ -1,9 +1,23 @@
 export function SiteHeader() {
   return (
-    <header className="border-b">
+    <header className="border-b bg-white">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <div className="text-sm font-semibold">
-          Savior <span className="opacity-60">by Zippers</span>
+        <div className="flex items-center gap-3 text-sm font-semibold">
+          <div
+            aria-hidden="true"
+            className="grid h-9 w-9 place-items-center rounded-xl font-extrabold"
+            style={{
+              background:
+                'linear-gradient(135deg, rgb(var(--zippers-green)), rgb(var(--zippers-blue)))',
+              color: '#032014',
+            }}
+          >
+            Z
+          </div>
+
+          <div>
+            Savior <span className="opacity-60">by Zippers</span>
+          </div>
         </div>
 
         <nav className="flex gap-4 text-sm opacity-80">

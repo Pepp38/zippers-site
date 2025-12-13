@@ -47,9 +47,9 @@ Savior.init({
 
   demo: {
     title: 'Demo',
-    note: 'Refresh the page and the draft comes back. No backend.',
-    assetPath: '/demo.gif',
-    placeholderText: 'Add public/demo.gif',
+    note: 'Install it, type in a form, refresh the page. The draft should come back. No backend.',
+    assetPath: '',
+    placeholderText: '',
   },
 
   reliability: {

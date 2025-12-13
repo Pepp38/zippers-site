@@ -7,13 +7,13 @@ export function SaviorLanding() {
   const { hero, problem, features, howItWorks, install, demo, reliability, links, faq } = saviorContent;
 
   return (
-    <>
+    <div className="app-shell">
+      <div className="card-shell">
       <SiteHeader />
 
       <main>
         <Section id="top">
           
-          <p className="text-sm opacity-70">Savior by Zippers</p>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-tight">
             {hero.title}
@@ -36,11 +36,11 @@ export function SaviorLanding() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-              className="rounded-xl px-5 py-3 text-white" style={{ backgroundColor: `rgb(var(--accent))` }}
-              href={hero.ctaPrimary.href}
-            >
-              {hero.ctaPrimary.label}
-            </a>
+            className="btn-primary rounded-xl px-5 py-3 font-semibold"
+            href={hero.ctaPrimary.href}
+          >
+            {hero.ctaPrimary.label}
+          </a>
 
             <a
               className="rounded-xl border px-5 py-3"
@@ -53,7 +53,7 @@ export function SaviorLanding() {
           </div>
         </Section>
 
-        <Section>
+        <Section className="section-tint">
           <h2 className="text-2xl font-semibold">{problem.title}</h2>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
             {problem.bullets.map((item) => (
@@ -75,7 +75,7 @@ export function SaviorLanding() {
           </ul>
         </Section>
 
-        <Section id="how-it-works">
+        <Section id="how-it-works" className="section-tint">
           <h2 className="text-2xl font-semibold">{howItWorks.title}</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {howItWorks.steps.map((step) => (
@@ -101,12 +101,15 @@ export function SaviorLanding() {
           </pre>
         </Section>
 
-        <Section>
+        <Section className="section-tint">
           <h2 className="text-2xl font-semibold">{demo.title}</h2>
           <p className="mt-3 max-w-2xl opacity-80">{demo.note}</p>
 
           <div className="mt-6 rounded-2xl border p-5">
-            <p className="text-sm opacity-70">{demo.placeholderText}</p>
+            <p className="text-sm opacity-80">
+              Demo media is coming soon. For now, the fastest way to feel it is to install Savior,
+              refresh your form page, and watch the draft restore.
+            </p>
           </div>
         </Section>
 
@@ -136,7 +139,7 @@ export function SaviorLanding() {
           </div>
         </Section>
 
-        <Section>
+        <Section className="section-tint">
           <h2 className="text-2xl font-semibold">{links.title}</h2>
 
           <ul className="mt-4 space-y-3">
@@ -172,6 +175,7 @@ export function SaviorLanding() {
       </main>
 
       <SiteFooter />
-    </>
+      </div>
+    </div>
   );
 }

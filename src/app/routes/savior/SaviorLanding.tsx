@@ -10,8 +10,8 @@ export function SaviorLanding() {
     <div className="app-shell">
       <div className="card-shell">
       <SiteHeader />
-
-      <main>
+      <div className="card-shell-inner">
+        <main>
         <Section id="top">
           
 
@@ -173,8 +173,8 @@ export function SaviorLanding() {
           </div>
         </Section>
       </main>
-
-      <SiteFooter />
+        <SiteFooter />
+      </div>
       </div>
     </div>
   );

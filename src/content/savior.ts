@@ -45,6 +45,13 @@ Savior.init({
 });`,
   },
 
+  demo: {
+    title: 'Demo',
+    note: 'Refresh the page and the draft comes back. No backend.',
+    assetPath: '/demo.gif',
+    placeholderText: 'Add public/demo.gif',
+  },
+
   reliability: {
     title: 'Reliability',
     bullets: [

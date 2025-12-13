@@ -4,7 +4,7 @@ import { SiteFooter } from '../../../components/layout/SiteFooter';
 import { Section } from '../../../components/layout/Section';
 
 export function SaviorLanding() {
-  const { hero, problem, features, howItWorks, install, reliability, faq } = saviorContent;
+  const { hero, problem, features, howItWorks, install, demo, reliability, links, faq } = saviorContent;
 
   return (
     <>
@@ -98,6 +98,15 @@ export function SaviorLanding() {
           <pre className="mt-3 overflow-x-auto rounded-2xl bg-zinc-950 p-4 text-sm text-white">
             <code>{install.snippet}</code>
           </pre>
+        </Section>
+
+        <Section>
+          <h2 className="text-2xl font-semibold">{demo.title}</h2>
+          <p className="mt-3 max-w-2xl opacity-80">{demo.note}</p>
+
+          <div className="mt-6 rounded-2xl border p-5">
+            <p className="text-sm opacity-70">{demo.placeholderText}</p>
+          </div>
         </Section>
 
         <Section>

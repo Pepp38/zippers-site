@@ -7,9 +7,15 @@ function timeHMS(): string {
   return new Date().toISOString().slice(11, 19);
 }
 
+function safeErr(e: unknown): string {
+  if (e instanceof Error) return `${e.name}: ${e.message}`;
+  return String(e);
+}
+
 export function TrySaviorDemo() {
-  const formId = "savior-try-form";
-  const logSessionKey = "zippers:savior:try:logs:v1";
+  const formDomId = "savior-try-form";
+  const saviorFormId = "try-savior"; // id logique/stable pour le draft (indépendant du DOM)
+  const logSessionKey = "zippers:savior:try:logs:v2";
 
   const [logs, setLogs] = useState<LogLine[]>([]);
   const mountedRef = useRef(false);
@@ -31,13 +37,47 @@ export function TrySaviorDemo() {
     } catch {}
   };
 
-  const clearDraft = () => {
-    try {
-      Savior.clearDraft?.(formId);
-      addLog("Draft cleared (Savior.clearDraft).");
-    } catch {
-      addLog("Draft clear attempted (failed).");
+  const tryClearDraft = () => {
+    const candidates: Array<[string, unknown]> = [
+      [`clearDraft("${saviorFormId}")`, saviorFormId],
+      [`clearDraft("${formDomId}")`, formDomId],
+      [`clearDraft("#${formDomId}")`, `#${formDomId}`],
+    ];
+
+    for (const [label, arg] of candidates) {
+      try {
+        (Savior as any).clearDraft?.(arg);
+        addLog(`OK: ${label}`);
+        return;
+      } catch (e) {
+        addLog(`ERR: ${label} -> ${safeErr(e)}`);
+      }
     }
+
+    addLog("ERROR: could not clear draft with any known signature");
+  };
+
+  const tryExportDraft = () => {
+    const candidates: Array<[string, unknown]> = [
+      [`exportDraft("${saviorFormId}")`, saviorFormId],
+      [`exportDraft("${formDomId}")`, formDomId],
+      [`exportDraft("#${formDomId}")`, `#${formDomId}`],
+    ];
+
+    for (const [label, arg] of candidates) {
+      try {
+        const data = (Savior as any).exportDraft?.(arg);
+        const json = JSON.stringify(data);
+        addLog(`OK: ${label} -> ${json.length} chars`);
+        // Optionnel: log un extrait sans spammer
+        addLog(json.length > 160 ? `draft: ${json.slice(0, 160)}…` : `draft: ${json}`);
+        return;
+      } catch (e) {
+        addLog(`ERR: ${label} -> ${safeErr(e)}`);
+      }
+    }
+
+    addLog("ERROR: could not export draft with any known signature");
   };
 
   useEffect(() => {
@@ -53,14 +93,14 @@ export function TrySaviorDemo() {
     addLog("Page loaded.");
     addLog("Initializing Savior…");
 
-    // Patch localStorage writes: logs réels (Savior écrit ici)
     const originalSetItem = localStorage.setItem.bind(localStorage);
     const originalRemoveItem = localStorage.removeItem.bind(localStorage);
 
+    // Log des writes storage (preuve). Filtre élargi + safe (pas de secrets)
     localStorage.setItem = (key: string, value: string) => {
       const k = String(key);
-      // Filtre léger: on log les writes plausiblement liés à Savior
-      if (k.toLowerCase().includes("savior") || k.toLowerCase().includes(formId)) {
+      const lower = k.toLowerCase();
+      if (lower.includes("savior") || lower.includes("draft") || lower.includes(saviorFormId)) {
         const bytes = new Blob([value]).size;
         addLog(`storage.setItem("${k}", ${bytes} bytes)`);
       }
@@ -69,15 +109,22 @@ export function TrySaviorDemo() {
 
     localStorage.removeItem = (key: string) => {
       const k = String(key);
-      if (k.toLowerCase().includes("savior") || k.toLowerCase().includes(formId)) {
+      const lower = k.toLowerCase();
+      if (lower.includes("savior") || lower.includes("draft") || lower.includes(saviorFormId)) {
         addLog(`storage.removeItem("${k}")`);
       }
       return originalRemoveItem(key);
     };
 
-    const formEl = document.getElementById(formId) as HTMLFormElement | null;
+    const formEl = document.getElementById(formDomId) as HTMLFormElement | null;
+    if (!formEl) {
+      addLog(`ERROR: form #${formDomId} not found`);
+      return () => {
+        localStorage.setItem = originalSetItem;
+        localStorage.removeItem = originalRemoveItem;
+      };
+    }
 
-    // UX logs (input) + preuve password ignoré
     const onInput = (ev: Event) => {
       const el = ev.target as HTMLInputElement | HTMLTextAreaElement | null;
       if (!el) return;
@@ -92,31 +139,35 @@ export function TrySaviorDemo() {
       addLog(`Input: ${name}`);
     };
 
-    formEl?.addEventListener("input", onInput);
+    formEl.addEventListener("input", onInput);
 
-    // Init Savior. Signature incertaine, on teste 2 approches.
-    const tryInit = () => {
+    // --- Init Savior: on tente plusieurs signatures possibles et on log les erreurs réelles
+    const initAttempts: Array<[string, () => void]> = [
+      [`init({ selector: "#${formDomId}" })`, () => (Savior as any).init?.({ selector: `#${formDomId}` })],
+      [`init({ selector: "#${formDomId}", debug: true })`, () => (Savior as any).init?.({ selector: `#${formDomId}`, debug: true })],
+      [`init({ form: <form> })`, () => (Savior as any).init?.({ form: formEl })],
+      [`init(<form>)`, () => (Savior as any).init?.(formEl)],
+      [`init()`, () => (Savior as any).init?.()],
+    ];
+
+    let ok = false;
+    for (const [label, run] of initAttempts) {
       try {
-        Savior.init?.(`#${formId}`);
-        addLog(`Savior.init("#${formId}")`);
-        return true;
-      } catch {}
+        run();
+        addLog(`OK: Savior.${label}`);
+        ok = true;
+        break;
+      } catch (e) {
+        addLog(`ERR: Savior.${label} -> ${safeErr(e)}`);
+      }
+    }
 
-      try {
-        Savior.init?.({ formId });
-        addLog(`Savior.init({ formId: "${formId}" })`);
-        return true;
-      } catch {}
-
-      return false;
-    };
-
-    const ok = tryInit();
-    if (ok) {
-      addLog("Savior initialized.");
-
+    if (!ok) {
+      addLog("ERROR: Savior.init failed (see errors above).");
+    } else {
+      // Check restore après un délai plus réaliste
       setTimeout(() => {
-        const f = document.getElementById(formId) as HTMLFormElement | null;
+        const f = document.getElementById(formDomId) as HTMLFormElement | null;
         if (!f) return;
 
         const restored: string[] = [];
@@ -126,14 +177,12 @@ export function TrySaviorDemo() {
         if (nameEl?.value) restored.push("name");
         if (msgEl?.value) restored.push("message");
 
-        if (restored.length) addLog(`Restored: ${restored.join(", ")}`);
-      }, 80);
-    } else {
-      addLog("ERROR: Savior.init failed. We need the exact init signature.");
+        addLog(restored.length ? `Restored: ${restored.join(", ")}` : "Restored: (nothing yet)");
+      }, 500);
     }
 
     return () => {
-      formEl?.removeEventListener("input", onInput);
+      formEl.removeEventListener("input", onInput);
       localStorage.setItem = originalSetItem;
       localStorage.removeItem = originalRemoveItem;
     };
@@ -153,7 +202,7 @@ export function TrySaviorDemo() {
 
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-200 bg-white p-6">
-          <form id={formId}>
+          <form id={formDomId} data-savior={saviorFormId}>
             <label className="block text-sm font-medium">Name</label>
             <input
               name="name"
@@ -183,10 +232,18 @@ export function TrySaviorDemo() {
             <div className="mt-5 flex flex-wrap gap-3">
               <button
                 type="button"
-                onClick={clearDraft}
+                onClick={tryClearDraft}
                 className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold"
               >
                 Clear draft
+              </button>
+
+              <button
+                type="button"
+                onClick={tryExportDraft}
+                className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold"
+              >
+                Export draft
               </button>
 
               <button
@@ -215,9 +272,9 @@ export function TrySaviorDemo() {
           <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4 text-xs">
             <div className="font-semibold">What this proves</div>
             <ul className="mt-2 list-disc pl-5 opacity-80">
-              <li>Real storage writes happen as you type</li>
+              <li>Init attempts and real errors are visible</li>
               <li>Password is ignored</li>
-              <li>Restore is observable after refresh</li>
+              <li>Draft can be exported as real JSON</li>
             </ul>
           </div>
         </div>

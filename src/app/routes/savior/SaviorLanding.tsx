@@ -132,7 +132,7 @@ export function SaviorLanding() {
             {reliability.links.map((link) => (
               <a
                 key={link.href}
-                className="rounded-xl border border-std focus-ring px-5 py-3 text-sm"
+                className="rounded-xl border border-std focus-ring px-5 py-3 text-sm hover:bg-[rgba(0,180,160,0.08)]"
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
@@ -153,7 +153,7 @@ export function SaviorLanding() {
                   href={item.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 underline-offset-4 hover:underline"
+                  className="inline-flex items-center gap-2 link-primary focus-ring rounded-md"
                 >
                   {item.label}
                 </a>

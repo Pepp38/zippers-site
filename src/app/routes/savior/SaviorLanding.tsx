@@ -60,7 +60,7 @@ export function SaviorLanding() {
           <h2 className="text-2xl font-semibold">{problem.title}</h2>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
             {problem.bullets.map((item) => (
-              <li key={item} className="rounded-2xl border px-4 py-3 opacity-90">
+              <li key={item} className="pill rounded-2xl px-4 py-3">
                 {item}
               </li>
             ))}
@@ -71,7 +71,7 @@ export function SaviorLanding() {
           <h2 className="text-2xl font-semibold">{features.title}</h2>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2">
             {features.items.map((item) => (
-              <li key={item} className="rounded-2xl border px-4 py-3 opacity-90">
+              <li key={item} className="pill--feature rounded-2xl px-4 py-3">
                 {item}
               </li>
             ))}
@@ -122,7 +122,7 @@ export function SaviorLanding() {
 
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
             {reliability.bullets.map((item) => (
-              <li key={item} className="rounded-2xl border px-4 py-3 opacity-90">
+              <li key={item} className="pill rounded-2xl px-4 py-3">
                 {item}
               </li>
             ))}

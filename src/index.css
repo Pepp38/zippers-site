@@ -62,3 +62,18 @@ body{
 .btn-primary:hover{
   filter: brightness(0.97);
 }
+
+/* Pills */
+.pill{
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.pill--feature{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-weight: 600;
+}

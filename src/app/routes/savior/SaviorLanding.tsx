@@ -4,6 +4,8 @@ import { SiteHeader } from '../../../components/layout/SiteHeader';
 import { SiteFooter } from '../../../components/layout/SiteFooter';
 import { Section } from '../../../components/layout/Section';
 
+const SHOW_TRY_SAVIOR = false;
+
 export function SaviorLanding() {
   const { hero, problem, features, howItWorks, install, demo, reliability, links, faq } = saviorContent;
 
@@ -104,17 +106,16 @@ export function SaviorLanding() {
           </pre>
         </Section>
 
-        <Section className="section-tint">
-          <h2 className="text-2xl font-semibold">{demo.title}</h2>
-          <p className="mt-3 max-w-2xl opacity-80">{demo.note}</p>
+        {SHOW_TRY_SAVIOR && (
+          <Section className="section-tint">
+            <h2 className="text-2xl font-semibold">{demo.title}</h2>
+            <p className="mt-3 max-w-2xl opacity-80">{demo.note}</p>
 
-          <div className="mt-6 rounded-2xl border p-5">
-            <p className="text-sm opacity-80">
-              Demo media is coming soon. For now, the fastest way to feel it is to install Savior,
-              refresh your form page, and watch the draft restore.
-            </p>
-          </div>
-        </Section>
+            <div className="mt-6 rounded-2xl border p-5">
+              <TrySaviorDemo />
+            </div>
+          </Section>
+        )}
 
         <Section>
           <h2 className="text-2xl font-semibold">{reliability.title}</h2>

@@ -255,6 +255,11 @@ export function TrySaviorDemo() {
               </button>
 
               <span className="ml-auto self-center text-xs opacity-60">Tip: refresh now</span>
+              <p className="mt-3 text-xs opacity-70">
+                Clear draft removes persisted storage only.
+                Refresh the page to confirm nothing is restored.
+              </p>
+
             </div>
           </form>
         </div>

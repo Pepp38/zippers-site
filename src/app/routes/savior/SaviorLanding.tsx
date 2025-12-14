@@ -30,7 +30,7 @@ export function SaviorLanding() {
             {hero.badges.map((badge) => (
               <span
                 key={badge}
-                className="rounded-full border px-3 py-1 text-sm"
+                className="rounded-full border border-std px-3 py-1 text-sm"
               >
                 {badge}
               </span>
@@ -39,14 +39,14 @@ export function SaviorLanding() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-            className="btn-primary rounded-xl px-5 py-3 font-semibold"
+            className="btn-primary focus-ring rounded-xl px-5 py-3 font-semibold"
             href={hero.ctaPrimary.href}
           >
             {hero.ctaPrimary.label}
           </a>
 
             <a
-              className="rounded-xl border px-5 py-3"
+              className="rounded-xl border border-std focus-ring px-5 py-3"
               href={hero.ctaSecondary.href}
               target="_blank"
               rel="noreferrer"
@@ -84,7 +84,7 @@ export function SaviorLanding() {
           <h2 className="text-2xl font-semibold">{howItWorks.title}</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {howItWorks.steps.map((step) => (
-              <div key={step.title} className="rounded-2xl border p-5">
+              <div key={step.title} className="rounded-2xl border border-std p-5">
                 <p className="text-sm font-semibold">Step</p>
                 <h3 className="mt-2 font-semibold">{step.title}</h3>
                 <p className="mt-2">{step.body}</p>
@@ -111,7 +111,7 @@ export function SaviorLanding() {
             <h2 className="text-2xl font-semibold">{demo.title}</h2>
             <p className="mt-3 max-w-2xl">{demo.note}</p>
 
-            <div className="mt-6 rounded-2xl border p-5">
+            <div className="mt-6 rounded-2xl border border-std p-5">
               <TrySaviorDemo />
             </div>
           </Section>
@@ -132,7 +132,7 @@ export function SaviorLanding() {
             {reliability.links.map((link) => (
               <a
                 key={link.href}
-                className="rounded-xl border px-5 py-3 text-sm"
+                className="rounded-xl border border-std focus-ring px-5 py-3 text-sm"
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
@@ -167,7 +167,7 @@ export function SaviorLanding() {
 
           <div className="mt-6 grid gap-4">
             {faq.items.map((item) => (
-              <details key={item.q} className="rounded-2xl border p-5">
+              <details key={item.q} className="rounded-2xl border border-std p-5">
                 <summary className="cursor-pointer font-semibold">
                   {item.q}
                 </summary>

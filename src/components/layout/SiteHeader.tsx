@@ -1,6 +1,6 @@
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-std bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3 text-sm font-semibold">
           <div
@@ -21,10 +21,10 @@ export function SiteHeader() {
         </div>
 
         <nav className="flex gap-4 text-sm opacity-80">
-          <a href="#features" className="hover:opacity-100">Features</a>
-          <a href="#how-it-works" className="hover:opacity-100">How it works</a>
-          <a href="#install" className="hover:opacity-100">Install</a>
-          <a href="#faq" className="hover:opacity-100">FAQ</a>
+          <a href="#features" className="focus-ring rounded-md hover:opacity-100">Features</a>
+          <a href="#how-it-works" className="focus-ring rounded-md hover:opacity-100">How it works</a>
+          <a href="#install" className="focus-ring rounded-md hover:opacity-100">Install</a>
+          <a href="#faq" className="focus-ring rounded-md hover:opacity-100">FAQ</a>
         </nav>
       </div>
     </header>

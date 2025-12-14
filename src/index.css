@@ -77,3 +77,24 @@ body{
   color: var(--text-primary);
   font-weight: 600;
 }
+
+/* Standard borders (architect-approved) */
+.border-std{
+  border-color: var(--border);
+}
+
+/* Primary links */
+.link-primary{
+  color: var(--primary);
+  font-weight: 600;
+}
+.link-primary:hover{
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Focus ring (accessible, accent is rare) */
+.focus-ring:focus-visible{
+  outline: 3px solid rgba(46, 246, 86, 0.55);
+  outline-offset: 2px;
+}

@@ -2,7 +2,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t">
+    <footer className="border-t border-std">
       <div className="mx-auto flex max-w-5xl flex-col gap-3 px-6 py-10 text-sm opacity-70 sm:flex-row sm:items-center sm:justify-between">
         <p>© {year} Savior. Built under the Zippers ecosystem.</p>
 

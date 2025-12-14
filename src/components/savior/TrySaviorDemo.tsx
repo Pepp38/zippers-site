@@ -276,6 +276,30 @@ export function TrySaviorDemo() {
 
           <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4 text-xs">
             <div className="font-semibold">What this proves</div>
+          <div className="mt-4 rounded-xl border border-slate-200 bg-white p-4 text-xs">
+            <div className="font-semibold">Supported fields</div>
+            <ul className="mt-2 list-disc pl-5 opacity-80">
+              <li>input[type="text"]</li>
+              <li>input[type="email"]</li>
+              <li>input[type="number"]</li>
+              <li>textarea</li>
+              <li>select</li>
+              <li>checkbox</li>
+              <li>radio</li>
+            </ul>
+
+            <div className="mt-3 font-semibold">Intentionally ignored</div>
+            <ul className="mt-2 list-disc pl-5 opacity-80">
+              <li>input[type="password"]</li>
+              <li>input[type="file"]</li>
+              <li>hidden fields</li>
+            </ul>
+
+            <div className="mt-2 opacity-60">
+              Behavior is explicit by design.
+            </div>
+          </div>
+
             <ul className="mt-2 list-disc pl-5 opacity-80">
               <li>Init attempts and real errors are visible</li>
               <li>Password is ignored</li>

@@ -1,4 +1,5 @@
 import { saviorContent } from '../../../content/savior';
+import { TrySaviorDemo } from "../../../components/savior/TrySaviorDemo";
 import { SiteHeader } from '../../../components/layout/SiteHeader';
 import { SiteFooter } from '../../../components/layout/SiteFooter';
 import { Section } from '../../../components/layout/Section';
@@ -76,6 +77,8 @@ export function SaviorLanding() {
         </Section>
 
         <Section id="how-it-works" className="section-tint">
+        <TrySaviorDemo />
+
           <h2 className="text-2xl font-semibold">{howItWorks.title}</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {howItWorks.steps.map((step) => (

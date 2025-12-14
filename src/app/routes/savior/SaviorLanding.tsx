@@ -22,7 +22,7 @@ export function SaviorLanding() {
             {hero.title}
           </h1>
 
-          <p className="mt-4 max-w-2xl text-lg opacity-80">
+          <p className="mt-4 max-w-2xl text-lg">
             {hero.subtitle}
           </p>
 
@@ -30,7 +30,7 @@ export function SaviorLanding() {
             {hero.badges.map((badge) => (
               <span
                 key={badge}
-                className="rounded-full border px-3 py-1 text-sm opacity-80"
+                className="rounded-full border px-3 py-1 text-sm"
               >
                 {badge}
               </span>
@@ -85,9 +85,9 @@ export function SaviorLanding() {
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {howItWorks.steps.map((step) => (
               <div key={step.title} className="rounded-2xl border p-5">
-                <p className="text-sm opacity-60">Step</p>
+                <p className="text-sm font-semibold">Step</p>
                 <h3 className="mt-2 font-semibold">{step.title}</h3>
-                <p className="mt-2 opacity-80">{step.body}</p>
+                <p className="mt-2">{step.body}</p>
               </div>
             ))}
           </div>
@@ -109,7 +109,7 @@ export function SaviorLanding() {
         {SHOW_TRY_SAVIOR && (
           <Section className="section-tint">
             <h2 className="text-2xl font-semibold">{demo.title}</h2>
-            <p className="mt-3 max-w-2xl opacity-80">{demo.note}</p>
+            <p className="mt-3 max-w-2xl">{demo.note}</p>
 
             <div className="mt-6 rounded-2xl border p-5">
               <TrySaviorDemo />
@@ -132,7 +132,7 @@ export function SaviorLanding() {
             {reliability.links.map((link) => (
               <a
                 key={link.href}
-                className="rounded-xl border px-5 py-3 text-sm hover:opacity-100 opacity-90"
+                className="rounded-xl border px-5 py-3 text-sm"
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
@@ -171,7 +171,7 @@ export function SaviorLanding() {
                 <summary className="cursor-pointer font-semibold">
                   {item.q}
                 </summary>
-                <p className="mt-3 opacity-80">{item.a}</p>
+                <p className="mt-3">{item.a}</p>
               </details>
             ))}
           </div>

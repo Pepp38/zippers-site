@@ -1,3 +1,6 @@
+import { LandingHeader } from "../../../components/layout/LandingHeader";
+import { LandingFooter } from "../../../components/layout/LandingFooter";
+
 import { useEffect } from 'react';
 import './saviorLanding.css';
 
@@ -137,44 +140,45 @@ export function SaviorLanding() {
 
   return (
     <>
-      <header>
-        <div className="wrap">
-          <div className="top">
-            <div className="logo">SAVIOR</div>
-            <nav>
-              <a href="#try">Try</a>
-              <a href="#by-design">By design</a>
-              <a href="#coverage">Coverage</a>
-              <a href="#install">Install</a>
-            </nav>
-          </div>
+      <LandingHeader
+  brandLabel="SAVIOR"
+  links={[
+    { label: "Try", href: "#try" },
+    { label: "By design", href: "#by-design" },
+    { label: "Coverage", href: "#coverage" },
+    { label: "Install", href: "#install" },
+  ]}
+/>
 
-          <div className="hero">
-            <h1>
-              Stop losing <span>user input</span>.
-            </h1>
-            <p className="lead">
-              You already know the bug. A refresh, a crash, a tab closed too fast, and everything is gone. Savior silently saves form input and restores it
-              when things break. No backend. No dependencies. Drop it in and forget about it.
-            </p>
+<header>
+  <div className="wrap">
+    <div className="hero">
+      <h1>
+        Stop losing <span>user input</span>.
+      </h1>
+      <p className="lead">
+        You already know the bug. A refresh, a crash, a tab closed too fast, and everything is gone. Savior silently saves form input and restores it when
+        things break. No backend. No dependencies. Drop it in and forget about it.
+      </p>
 
-            <div className="actions">
-              <a className="primary" href="#install">
-                Install
-              </a>
-              <a className="secondary" href="#">
-                View on GitHub
-              </a>
-            </div>
+      <div className="actions">
+        <a className="primary" href="#install">
+          Install
+        </a>
+        <a className="secondary" href="#">
+          View on GitHub
+        </a>
+      </div>
 
-            <div className="trust">
-              <span>Dependency-free</span>
-              <span>Local-first</span>
-              <span>Works with any form</span>
-            </div>
-          </div>
-        </div>
-      </header>
+      <div className="trust">
+        <span>Dependency-free</span>
+        <span>Local-first</span>
+        <span>Works with any form</span>
+      </div>
+    </div>
+  </div>
+</header>
+
 
       <main>
         <section id="try">
@@ -386,13 +390,9 @@ export function SaviorLanding() {
             </div>
           </div>
         </section>
-
-        <footer>
-          <div className="wrap">
-            <div>© Savior. Local-first draft recovery for forms.</div>
-          </div>
-        </footer>
       </main>
+      <LandingFooter text="© Savior. Local-first draft recovery for forms." />
+
     </>
   );
 }

@@ -1,26 +1,38 @@
-import { LandingHeader } from "../../../components/layout/LandingHeader";
-import { LandingFooter } from "../../../components/layout/LandingFooter";
-
 import { useEffect } from 'react';
+import { LandingFooter } from '../../../components/layout/LandingFooter';
+import { LandingHeader } from '../../../components/layout/LandingHeader';
 import './saviorLanding.css';
 
 export function SaviorLanding() {
   useEffect(() => {
+    // Scope landing theme to this route only
+    document.body.classList.add('savior-landing');
+
     // Demo-only implementation to illustrate the promise.
     // This is not the actual Savior library.
-
     const STORAGE_KEY = 'demo:savior:form:draft';
 
     const formEl = document.getElementById('demoForm') as HTMLFormElement | null;
-    const statusLineEl = document.getElementById('statusLine') as HTMLParagraphElement | null;
-    const storagePreviewEl = document.getElementById('storagePreview') as HTMLDivElement | null;
+const statusLineEl = document.getElementById('statusLine');
+const storagePreviewEl = document.getElementById('storagePreview');
 
-    if (!formEl || !statusLineEl || !storagePreviewEl) return;
+if (!(statusLineEl instanceof HTMLParagraphElement)) {
+  return () => document.body.classList.remove('savior-landing');
+}
+if (!(storagePreviewEl instanceof HTMLDivElement)) {
+  return () => document.body.classList.remove('savior-landing');
+}
+
+const statusLine = statusLineEl;         // now non-null, correct type
+const storagePreview = storagePreviewEl; // now non-null, correct type
 
 
-    // Narrowing for TypeScript
-    const statusLine = statusLineEl;
-    const storagePreview = storagePreviewEl;
+    // If DOM isn't ready (or markup changed), keep styling scoped but skip demo wiring
+    if (!formEl || !statusLineEl || !storagePreviewEl) {
+      return () => {
+        document.body.classList.remove('savior-landing');
+      };
+    }
 
     function readDraft(): Record<string, string> {
       try {
@@ -39,7 +51,7 @@ export function SaviorLanding() {
     }
 
     function setStatus(text: string) {
-      statusLine.innerHTML = `Status: <strong>${text}</strong>`;
+    statusLine.innerHTML = `Status: <strong>${text}</strong>`;
     }
 
     function refreshPreview() {
@@ -47,8 +59,10 @@ export function SaviorLanding() {
       storagePreview.textContent = JSON.stringify(draft, null, 2);
     }
 
+
     function restoreDraftIntoForm() {
       const draft = readDraft();
+
       const textEl = document.getElementById('demoText') as HTMLTextAreaElement | null;
       const emailEl = document.getElementById('demoEmail') as HTMLInputElement | null;
       const passwordEl = document.getElementById('demoPassword') as HTMLInputElement | null;
@@ -65,10 +79,10 @@ export function SaviorLanding() {
       refreshPreview();
     }
 
-    let saveTimerId = window.setTimeout(() => {}, 0);
+    let saveTimerId: number | null = null;
 
     function scheduleSave() {
-      window.clearTimeout(saveTimerId);
+      if (saveTimerId !== null) window.clearTimeout(saveTimerId);
 
       saveTimerId = window.setTimeout(() => {
         const textEl = document.getElementById('demoText') as HTMLTextAreaElement | null;
@@ -96,9 +110,6 @@ export function SaviorLanding() {
       refreshPreview();
     }
 
-    // Init
-    restoreDraftIntoForm();
-
     const onInput = (e: Event) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
@@ -112,82 +123,85 @@ export function SaviorLanding() {
       scheduleSave();
     };
 
+    const onSimulateReload = () => {
+      setStatus('simulating reload');
+      restoreDraftIntoForm();
+    };
+
     const btnRestore = document.getElementById('btnRestore') as HTMLButtonElement | null;
     const btnSimulateReload = document.getElementById('btnSimulateReload') as HTMLButtonElement | null;
     const btnClear = document.getElementById('btnClear') as HTMLButtonElement | null;
 
-    formEl.addEventListener('input', onInput);
-    btnRestore?.addEventListener('click', restoreDraftIntoForm);
-    btnSimulateReload?.addEventListener('click', () => {
-      setStatus('simulating reload');
-      restoreDraftIntoForm();
-    });
-    btnClear?.addEventListener('click', () => {
-      // Mimic submit behavior: clear draft.
-      clearDraft();
-    });
-
+    // Init
+    restoreDraftIntoForm();
     refreshPreview();
 
+    // Wire events
+    formEl.addEventListener('input', onInput);
+    btnRestore?.addEventListener('click', restoreDraftIntoForm);
+    btnSimulateReload?.addEventListener('click', onSimulateReload);
+    btnClear?.addEventListener('click', clearDraft);
+
     return () => {
-      window.clearTimeout(saveTimerId);
+      document.body.classList.remove('savior-landing');
+
+      if (saveTimerId !== null) window.clearTimeout(saveTimerId);
+
       formEl.removeEventListener('input', onInput);
       btnRestore?.removeEventListener('click', restoreDraftIntoForm);
-      // note: anonymous fn cannot be removed reliably; keep it simple by not removing or refactor if needed
-      // For now, OK because landing isn't repeatedly mounted/unmounted in normal use.
+      btnSimulateReload?.removeEventListener('click', onSimulateReload);
+      btnClear?.removeEventListener('click', clearDraft);
     };
   }, []);
 
   return (
     <>
       <LandingHeader
-  brandLabel="SAVIOR"
-  links={[
-    { label: "Try", href: "#try" },
-    { label: "By design", href: "#by-design" },
-    { label: "Coverage", href: "#coverage" },
-    { label: "Install", href: "#install" },
-  ]}
-/>
+        brandLabel="SAVIOR"
+        links={[
+          { label: 'Try', href: '#try' },
+          { label: 'By design', href: '#by-design' },
+          { label: 'Coverage', href: '#coverage' },
+          { label: 'Install', href: '#install' },
+        ]}
+      />
 
-<header>
-  <div className="wrap">
-    <div className="hero">
-      <h1>
-        Stop losing <span>user input</span>.
-      </h1>
-      <p className="lead">
-        You already know the bug. A refresh, a crash, a tab closed too fast, and everything is gone. Savior silently saves form input and restores it when
-        things break. No backend. No dependencies. Drop it in and forget about it.
-      </p>
+      <header>
+        <div className="wrap">
+          <div className="hero">
+            <h1>
+              Stop losing <span>user input</span>.
+            </h1>
 
-      <div className="actions">
-        <a className="primary" href="#install">
-          Install
-        </a>
-        <a className="secondary" href="#">
-          View on GitHub
-        </a>
-      </div>
+            <p className="lead">
+              You already know the bug. A refresh, a crash, a tab closed too fast, and everything is gone. Savior silently saves form input and restores it
+              when things break. No backend. No dependencies. Drop it in and forget about it.
+            </p>
 
-      <div className="trust">
-        <span>Dependency-free</span>
-        <span>Local-first</span>
-        <span>Works with any form</span>
-      </div>
-    </div>
-  </div>
-</header>
+            <div className="actions">
+              <a className="primary" href="#install">
+                Install
+              </a>
+              <a className="secondary" href="#">
+                View on GitHub
+              </a>
+            </div>
 
+            <div className="trust">
+              <span>Dependency-free</span>
+              <span>Local-first</span>
+              <span>Works with any form</span>
+            </div>
+          </div>
+        </div>
+      </header>
 
       <main>
         <section id="try">
           <div className="wrap">
             <p className="kicker">Try it</p>
             <h2 className="section-title">Lose input. Reload. Get it back.</h2>
-            <p className="section-sub">
-              Type something, then refresh the page. Your text comes back. Password fields are ignored by design.
-            </p>
+            <p className="section-sub">Type something, then refresh the page. Your text comes back. Password fields are ignored by design.</p>
 
             <div className="grid">
               <div className="card">
@@ -290,6 +304,7 @@ export function SaviorLanding() {
                 <p className="hint" style={{ margin: '0 0 0.9rem 0' }}>
                   <strong>Covered field types</strong>
                 </p>
+
                 <div className="list">
                   <div className="pill ok">text</div>
                   <div className="pill ok">textarea</div>
@@ -308,9 +323,11 @@ export function SaviorLanding() {
               <div className="card">
                 <details open>
                   <summary style={{ cursor: 'pointer', fontWeight: 650, color: 'var(--text)' }}>Tested behaviors (high level)</summary>
+
                   <div className="hint" style={{ marginTop: '0.8rem' }}>
                     The point is not “100% coverage”. The point is: the failure modes you care about are explicitly tested.
                   </div>
+
                   <div className="list" style={{ marginTop: '1rem' }}>
                     <div className="pill ok">restore on load</div>
                     <div className="pill ok">refresh / navigation resilience</div>
@@ -324,6 +341,7 @@ export function SaviorLanding() {
                 <p className="hint" style={{ marginTop: '1.2rem' }}>
                   Want the exact list of automated + manual scenarios. Link it in docs or GitHub under <strong>Tests</strong>.
                 </p>
+
                 <div className="row">
                   <a className="btn" href="#">
                     Open tests
@@ -369,6 +387,7 @@ export function SaviorLanding() {
                 <p className="hint" style={{ margin: '0 0 1rem 0' }}>
                   What you get:
                 </p>
+
                 <div className="list">
                   <div className="pill ok">Debounced autosave</div>
                   <div className="pill ok">Draft restore on load</div>
@@ -378,6 +397,7 @@ export function SaviorLanding() {
                 <p className="hint" style={{ marginTop: '1.2rem' }}>
                   Want edge cases, multi-form, drivers, or customization. Head to docs.
                 </p>
+
                 <div className="row">
                   <a className="btn" href="#">
                     Open docs
@@ -390,9 +410,9 @@ export function SaviorLanding() {
             </div>
           </div>
         </section>
-      </main>
-      <LandingFooter text="© Savior. Local-first draft recovery for forms." />
 
+        <LandingFooter text="© Savior. Local-first draft recovery for forms." />
+      </main>
     </>
   );
 }

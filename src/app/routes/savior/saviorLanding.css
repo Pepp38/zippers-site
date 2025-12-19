@@ -36,9 +36,16 @@ body.savior-landing .wrap {
 }
 
 body.savior-landing header {
-  padding: 3.5rem 0 4rem;
+  padding: 4rem 0 0 0; 
+}
+
+
+body.savior-landing .savior-hero {
+  padding: 0rem 0 4rem;
   border-bottom: 1px solid var(--border-soft);
 }
+
+
 
 body.savior-landing .top {
   display: flex;

@@ -13,18 +13,18 @@ export function SaviorLanding() {
     const STORAGE_KEY = 'demo:savior:form:draft';
 
     const formEl = document.getElementById('demoForm') as HTMLFormElement | null;
-const statusLineEl = document.getElementById('statusLine');
-const storagePreviewEl = document.getElementById('storagePreview');
+    const statusLineEl = document.getElementById('statusLine');
+    const storagePreviewEl = document.getElementById('storagePreview');
 
-if (!(statusLineEl instanceof HTMLParagraphElement)) {
-  return () => document.body.classList.remove('savior-landing');
-}
-if (!(storagePreviewEl instanceof HTMLDivElement)) {
-  return () => document.body.classList.remove('savior-landing');
-}
+    if (!(statusLineEl instanceof HTMLParagraphElement)) {
+      return () => document.body.classList.remove('savior-landing');
+    }
+    if (!(storagePreviewEl instanceof HTMLDivElement)) {
+      return () => document.body.classList.remove('savior-landing');
+    }
 
-const statusLine = statusLineEl;         // now non-null, correct type
-const storagePreview = storagePreviewEl; // now non-null, correct type
+    const statusLine = statusLineEl;         // now non-null, correct type
+    const storagePreview = storagePreviewEl; // now non-null, correct type
 
 
     // If DOM isn't ready (or markup changed), keep styling scoped but skip demo wiring
@@ -166,7 +166,7 @@ const storagePreview = storagePreviewEl; // now non-null, correct type
         ]}
       />
 
-      <header>
+      <header className="savior-hero">
         <div className="wrap">
           <div className="hero">
             <h1>

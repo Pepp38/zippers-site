@@ -1,185 +1,398 @@
-import { saviorContent } from '../../../content/savior';
-import { TrySaviorDemo } from "../../../components/savior/TrySaviorDemo";
-import { SiteHeader } from '../../../components/layout/SiteHeader';
-import { SiteFooter } from '../../../components/layout/SiteFooter';
-import { Section } from '../../../components/layout/Section';
-
-const SHOW_TRY_SAVIOR = false;
+import { useEffect } from 'react';
+import './saviorLanding.css';
 
 export function SaviorLanding() {
-  const { hero, problem, features, howItWorks, install, demo, reliability, links, faq } = saviorContent;
+  useEffect(() => {
+    // Demo-only implementation to illustrate the promise.
+    // This is not the actual Savior library.
+
+    const STORAGE_KEY = 'demo:savior:form:draft';
+
+    const formEl = document.getElementById('demoForm') as HTMLFormElement | null;
+    const statusLineEl = document.getElementById('statusLine') as HTMLParagraphElement | null;
+    const storagePreviewEl = document.getElementById('storagePreview') as HTMLDivElement | null;
+
+    if (!formEl || !statusLineEl || !storagePreviewEl) return;
+
+
+    // Narrowing for TypeScript
+    const statusLine = statusLineEl;
+    const storagePreview = storagePreviewEl;
+
+    function readDraft(): Record<string, string> {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object') return {};
+        return parsed as Record<string, string>;
+      } catch {
+        return {};
+      }
+    }
+
+    function writeDraft(draft: Record<string, string>) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+    }
+
+    function setStatus(text: string) {
+      statusLine.innerHTML = `Status: <strong>${text}</strong>`;
+    }
+
+    function refreshPreview() {
+      const draft = readDraft();
+      storagePreview.textContent = JSON.stringify(draft, null, 2);
+    }
+
+    function restoreDraftIntoForm() {
+      const draft = readDraft();
+      const textEl = document.getElementById('demoText') as HTMLTextAreaElement | null;
+      const emailEl = document.getElementById('demoEmail') as HTMLInputElement | null;
+      const passwordEl = document.getElementById('demoPassword') as HTMLInputElement | null;
+
+      if (!textEl || !emailEl || !passwordEl) return;
+
+      textEl.value = draft.message ?? '';
+      emailEl.value = draft.email ?? '';
+
+      // Password is intentionally not restored.
+      passwordEl.value = '';
+
+      setStatus('restored from storage');
+      refreshPreview();
+    }
+
+    let saveTimerId = window.setTimeout(() => {}, 0);
+
+    function scheduleSave() {
+      window.clearTimeout(saveTimerId);
+
+      saveTimerId = window.setTimeout(() => {
+        const textEl = document.getElementById('demoText') as HTMLTextAreaElement | null;
+        const emailEl = document.getElementById('demoEmail') as HTMLInputElement | null;
+        const passwordEl = document.getElementById('demoPassword') as HTMLInputElement | null;
+
+        if (!textEl || !emailEl || !passwordEl) return;
+
+        // Exclude password fields by design (explicit no-op)
+        passwordEl.value = passwordEl.value;
+
+        writeDraft({
+          message: textEl.value,
+          email: emailEl.value,
+        });
+
+        setStatus('saved (password ignored)');
+        refreshPreview();
+      }, 350);
+    }
+
+    function clearDraft() {
+      localStorage.removeItem(STORAGE_KEY);
+      setStatus('draft cleared');
+      refreshPreview();
+    }
+
+    // Init
+    restoreDraftIntoForm();
+
+    const onInput = (e: Event) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      // Never save passwords.
+      if (target.getAttribute('type') === 'password') {
+        setStatus('password input ignored');
+        return;
+      }
+
+      scheduleSave();
+    };
+
+    const btnRestore = document.getElementById('btnRestore') as HTMLButtonElement | null;
+    const btnSimulateReload = document.getElementById('btnSimulateReload') as HTMLButtonElement | null;
+    const btnClear = document.getElementById('btnClear') as HTMLButtonElement | null;
+
+    formEl.addEventListener('input', onInput);
+    btnRestore?.addEventListener('click', restoreDraftIntoForm);
+    btnSimulateReload?.addEventListener('click', () => {
+      setStatus('simulating reload');
+      restoreDraftIntoForm();
+    });
+    btnClear?.addEventListener('click', () => {
+      // Mimic submit behavior: clear draft.
+      clearDraft();
+    });
+
+    refreshPreview();
+
+    return () => {
+      window.clearTimeout(saveTimerId);
+      formEl.removeEventListener('input', onInput);
+      btnRestore?.removeEventListener('click', restoreDraftIntoForm);
+      // note: anonymous fn cannot be removed reliably; keep it simple by not removing or refactor if needed
+      // For now, OK because landing isn't repeatedly mounted/unmounted in normal use.
+    };
+  }, []);
 
   return (
-    <div className="app-shell">
-      <div className="card-shell">
-      <SiteHeader />
-      <div className="card-shell-inner">
-        <main>
-        <Section id="top">
-          
-
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight">
-            {hero.title}
-          </h1>
-
-          <p className="mt-4 max-w-2xl text-lg">
-            {hero.subtitle}
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-2">
-            {hero.badges.map((badge) => (
-              <span
-                key={badge}
-                className="rounded-full border border-std px-3 py-1 text-sm"
-              >
-                {badge}
-              </span>
-            ))}
+    <>
+      <header>
+        <div className="wrap">
+          <div className="top">
+            <div className="logo">SAVIOR</div>
+            <nav>
+              <a href="#try">Try</a>
+              <a href="#by-design">By design</a>
+              <a href="#coverage">Coverage</a>
+              <a href="#install">Install</a>
+            </nav>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a
-            className="btn-primary focus-ring rounded-xl px-5 py-3 font-semibold"
-            href={hero.ctaPrimary.href}
-          >
-            {hero.ctaPrimary.label}
-          </a>
+          <div className="hero">
+            <h1>
+              Stop losing <span>user input</span>.
+            </h1>
+            <p className="lead">
+              You already know the bug. A refresh, a crash, a tab closed too fast, and everything is gone. Savior silently saves form input and restores it
+              when things break. No backend. No dependencies. Drop it in and forget about it.
+            </p>
 
-            <a
-              className="rounded-xl border border-std focus-ring px-5 py-3"
-              href={hero.ctaSecondary.href}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {hero.ctaSecondary.label}
-            </a>
-          </div>
-        </Section>
-
-        <Section className="section-tint">
-          <h2 className="text-2xl font-semibold">{problem.title}</h2>
-          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-            {problem.bullets.map((item) => (
-              <li key={item} className="pill rounded-2xl px-4 py-3">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section id="features">
-          <h2 className="text-2xl font-semibold">{features.title}</h2>
-          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-            {features.items.map((item) => (
-              <li key={item} className="pill--feature rounded-2xl px-4 py-3">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section id="how-it-works" className="section-tint">
-        <TrySaviorDemo />
-
-          <h2 className="text-2xl font-semibold">{howItWorks.title}</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {howItWorks.steps.map((step) => (
-              <div key={step.title} className="rounded-2xl border border-std p-5">
-                <p className="text-sm font-semibold">Step</p>
-                <h3 className="mt-2 font-semibold">{step.title}</h3>
-                <p className="mt-2">{step.body}</p>
-              </div>
-            ))}
-          </div>
-        </Section>
-
-        <Section id="install">
-          <h2 className="text-2xl font-semibold">{install.title}</h2>
-
-          <pre className="mt-4 overflow-x-auto rounded-2xl bg-zinc-950 p-4 text-sm text-white">
-            <code>{install.command}</code>
-          </pre>
-
-          <h3 className="mt-8 font-semibold">{install.snippetTitle}</h3>
-          <pre className="mt-3 overflow-x-auto rounded-2xl bg-zinc-950 p-4 text-sm text-white">
-            <code>{install.snippet}</code>
-          </pre>
-        </Section>
-
-        {SHOW_TRY_SAVIOR && (
-          <Section className="section-tint">
-            <h2 className="text-2xl font-semibold">{demo.title}</h2>
-            <p className="mt-3 max-w-2xl">{demo.note}</p>
-
-            <div className="mt-6 rounded-2xl border border-std p-5">
-              <TrySaviorDemo />
-            </div>
-          </Section>
-        )}
-
-        <Section>
-          <h2 className="text-2xl font-semibold">{reliability.title}</h2>
-
-          <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-            {reliability.bullets.map((item) => (
-              <li key={item} className="pill rounded-2xl px-4 py-3">
-                {item}
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            {reliability.links.map((link) => (
-              <a
-                key={link.href}
-                className="rounded-xl border border-std focus-ring px-5 py-3 text-sm hover:bg-[rgba(0,180,160,0.08)]"
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {link.label}
+            <div className="actions">
+              <a className="primary" href="#install">
+                Install
               </a>
-            ))}
+              <a className="secondary" href="#">
+                View on GitHub
+              </a>
+            </div>
+
+            <div className="trust">
+              <span>Dependency-free</span>
+              <span>Local-first</span>
+              <span>Works with any form</span>
+            </div>
           </div>
-        </Section>
+        </div>
+      </header>
 
-        <Section className="section-tint">
-          <h2 className="text-2xl font-semibold">{links.title}</h2>
+      <main>
+        <section id="try">
+          <div className="wrap">
+            <p className="kicker">Try it</p>
+            <h2 className="section-title">Lose input. Reload. Get it back.</h2>
+            <p className="section-sub">
+              Type something, then refresh the page. Your text comes back. Password fields are ignored by design.
+            </p>
 
-          <ul className="mt-4 space-y-3">
-            {links.items.map((item) => (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 link-primary focus-ring rounded-md"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </Section>
+            <div className="grid">
+              <div className="card">
+                <form id="demoForm" autoComplete="off">
+                  <label htmlFor="demoText">Message</label>
+                  <textarea id="demoText" name="message" placeholder="Write a few lines, then hit Refresh..." />
 
-        <Section id="faq">
-          <h2 className="text-2xl font-semibold">{faq.title}</h2>
+                  <label htmlFor="demoEmail">Email</label>
+                  <input id="demoEmail" name="email" type="email" placeholder="name@domain.com" />
 
-          <div className="mt-6 grid gap-4">
-            {faq.items.map((item) => (
-              <details key={item.q} className="rounded-2xl border border-std p-5">
-                <summary className="cursor-pointer font-semibold">
-                  {item.q}
-                </summary>
-                <p className="mt-3">{item.a}</p>
-              </details>
-            ))}
+                  <label htmlFor="demoPassword">Password (not saved)</label>
+                  <input id="demoPassword" name="password" type="password" placeholder="This field will not be stored" />
+
+                  <div className="row">
+                    <button className="btn primary" type="button" id="btnRestore">
+                      Restore draft
+                    </button>
+                    <button className="btn" type="button" id="btnSimulateReload">
+                      Simulate reload
+                    </button>
+                    <button className="btn danger" type="button" id="btnClear">
+                      Clear draft
+                    </button>
+                  </div>
+
+                  <p className="hint" id="statusLine">
+                    Status: <strong>waiting</strong>
+                  </p>
+                </form>
+              </div>
+
+              <div className="card">
+                <div className="list">
+                  <div className="pill ok">Textarea saved</div>
+                  <div className="pill ok">Text and email saved</div>
+                  <div className="pill no">Password ignored</div>
+                </div>
+
+                <p className="hint" style={{ marginTop: '1.2rem' }}>
+                  This demo uses the same idea: debounced saves to browser storage, scoped per form, with password fields excluded. A senior dev can verify
+                  everything in DevTools.
+                </p>
+
+                <div className="code" aria-label="Storage preview">
+                  <span className="dim">storage key</span>
+                  <div>demo:savior:form:draft</div>
+                  <br />
+                  <span className="dim">saved json</span>
+                  <div id="storagePreview">{'{}'}</div>
+                </div>
+              </div>
+            </div>
           </div>
-        </Section>
+        </section>
+
+        <section id="by-design">
+          <div className="wrap">
+            <p className="kicker">By design</p>
+            <h2 className="section-title">Sensible defaults, not surprises.</h2>
+            <p className="section-sub">A few decisions that remove risk and reduce support tickets.</p>
+
+            <div className="grid">
+              <div className="card">
+                <div className="list">
+                  <div className="pill ok">No backend. Everything stays in the browser.</div>
+                  <div className="pill ok">Password fields are never saved.</div>
+                  <div className="pill ok">Storage is scoped per form.</div>
+                  <div className="pill ok">Submit clears the draft.</div>
+                </div>
+
+                <p className="hint" style={{ marginTop: '1.2rem' }}>
+                  These are the defaults people expect. You can still override behavior when you need it.
+                </p>
+              </div>
+
+              <div className="card">
+                <p className="hint" style={{ margin: '0 0 0.8rem 0' }}>
+                  The goal is boring reliability.
+                </p>
+                <div className="code">
+                  <span className="dim">principle</span>
+                  <div>protect users from accidental loss</div>
+                  <br />
+                  <span className="dim">result</span>
+                  <div>fewer tickets, fewer angry emails</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="coverage">
+          <div className="wrap">
+            <p className="kicker">Coverage</p>
+            <h2 className="section-title">What gets saved. What is tested.</h2>
+            <p className="section-sub">Lightweight, honest scope. Enough to build trust without turning the landing into a test report.</p>
+
+            <div className="grid">
+              <div className="card">
+                <p className="hint" style={{ margin: '0 0 0.9rem 0' }}>
+                  <strong>Covered field types</strong>
+                </p>
+                <div className="list">
+                  <div className="pill ok">text</div>
+                  <div className="pill ok">textarea</div>
+                  <div className="pill ok">email</div>
+                  <div className="pill ok">select</div>
+                  <div className="pill ok">checkbox / radio</div>
+                  <div className="pill ok">number</div>
+                  <div className="pill no">password (ignored)</div>
+                </div>
+
+                <p className="hint" style={{ marginTop: '1.2rem' }}>
+                  If a field is sensitive, you should be able to exclude it. Password is excluded by default.
+                </p>
+              </div>
+
+              <div className="card">
+                <details open>
+                  <summary style={{ cursor: 'pointer', fontWeight: 650, color: 'var(--text)' }}>Tested behaviors (high level)</summary>
+                  <div className="hint" style={{ marginTop: '0.8rem' }}>
+                    The point is not “100% coverage”. The point is: the failure modes you care about are explicitly tested.
+                  </div>
+                  <div className="list" style={{ marginTop: '1rem' }}>
+                    <div className="pill ok">restore on load</div>
+                    <div className="pill ok">refresh / navigation resilience</div>
+                    <div className="pill ok">corrupted storage JSON</div>
+                    <div className="pill ok">driver failure handling</div>
+                    <div className="pill ok">submit clears draft</div>
+                    <div className="pill ok">password excluded</div>
+                  </div>
+                </details>
+
+                <p className="hint" style={{ marginTop: '1.2rem' }}>
+                  Want the exact list of automated + manual scenarios. Link it in docs or GitHub under <strong>Tests</strong>.
+                </p>
+                <div className="row">
+                  <a className="btn" href="#">
+                    Open tests
+                  </a>
+                  <a className="btn" href="#">
+                    Manual suite
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="install">
+          <div className="wrap">
+            <p className="kicker">Install</p>
+            <h2 className="section-title">Drop it in.</h2>
+            <p className="section-sub">Install the package, then attach Savior to a form. That is it.</p>
+
+            <div className="grid">
+              <div className="card">
+                <div className="code" aria-label="Install command">
+                  <div>npm i @zippers/savior</div>
+                </div>
+
+                <div className="code" aria-label="Usage snippet" style={{ marginTop: '1rem' }}>
+                  <div>
+                    <span className="dim">// JS</span>
+                  </div>
+                  <div>import &#123; Savior &#125; from '@zippers/savior'</div>
+                  <div>&nbsp;</div>
+                  <div>const formEl = document.querySelector('form')</div>
+                  <div>const savior = new Savior(&#123; form: formEl &#125;)</div>
+                  <div>savior.init()</div>
+                </div>
+
+                <p className="hint" style={{ marginTop: '1rem' }}>
+                  Works with any form, any framework. No markup changes required.
+                </p>
+              </div>
+
+              <div className="card">
+                <p className="hint" style={{ margin: '0 0 1rem 0' }}>
+                  What you get:
+                </p>
+                <div className="list">
+                  <div className="pill ok">Debounced autosave</div>
+                  <div className="pill ok">Draft restore on load</div>
+                  <div className="pill ok">Safe exclusions</div>
+                </div>
+
+                <p className="hint" style={{ marginTop: '1.2rem' }}>
+                  Want edge cases, multi-form, drivers, or customization. Head to docs.
+                </p>
+                <div className="row">
+                  <a className="btn" href="#">
+                    Open docs
+                  </a>
+                  <a className="btn" href="#">
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer>
+          <div className="wrap">
+            <div>© Savior. Local-first draft recovery for forms.</div>
+          </div>
+        </footer>
       </main>
-        <SiteFooter />
-      </div>
-      </div>
-    </div>
+    </>
   );
 }

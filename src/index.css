@@ -2,99 +2,243 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-  /* Texte */
-  --text-primary: #2f4858;
-  --text-inverted: #ffffff;
+/* ============================================================
+   Zippers Theme (Light/Dark toggle)
+   Toggle:
+   <html data-theme="light"> or <html data-theme="dark">
+   Default: follows prefers-color-scheme
+   ============================================================ */
 
-  /* Surfaces */
-  --surface: #ffffff;
-  --surface-soft: rgba(0, 180, 160, 0.08);
-
-  /* Bordures */
-  --border: rgba(0, 106, 132, 0.28);
-
-  /* Brand */
+:root {
+  /* Brand primitives (locked) */
   --primary: #00d788;
   --support: #00b4a0;
   --accent: #2ef656;
   --deep: #008f9e;
   --ink: #2f4858;
+
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Alpha scale */
+  --a-04: 0.04;
+  --a-06: 0.06;
+  --a-08: 0.08;
+  --a-10: 0.10;
+  --a-12: 0.12;
+  --a-16: 0.16;
+  --a-20: 0.20;
+  --a-28: 0.28;
+  --a-35: 0.35;
+  --a-55: 0.55;
+
+  /* Radii / shadows / motion */
+  --r-lg: 18px;
+  --r-xl: 28px;
+
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast-ms: 120ms;
+  --dur-med-ms: 180ms;
+
+  /* Defaults (overridden by theme blocks below) */
+  --app-bg: var(--ink);
+  --surface-0: var(--white);
+  --surface-1: rgba(47, 72, 88, var(--a-06));
+  --surface-2: rgba(47, 72, 88, var(--a-10));
+
+  --text-1: #0f172a;
+  --text-2: rgba(15, 23, 42, 0.74);
+  --text-3: rgba(15, 23, 42, 0.56);
+  --text-inverted: rgba(255, 255, 255, 0.92);
+
+  --border-1: rgba(0, 143, 158, var(--a-28));
+  --border-2: rgba(0, 143, 158, var(--a-16));
+
+  --brand: var(--primary);
+  --brand-hover: #00c97e;
+  --brand-press: #00b973;
+
+  --link: var(--primary);
+  --focus-ring: rgba(46, 246, 86, var(--a-55));
+
+  --shadow-elev-2: 0 18px 45px rgba(0, 0, 0, 0.28);
+  --shadow-brand-soft: 0 14px 36px rgba(0, 215, 136, 0.14);
+
+  color-scheme: light dark;
 }
 
-/* App shell */
-body{
-  background: var(--ink);
-  color: var(--text-primary);
+/* ============================================================
+   THEME: Light
+   ============================================================ */
+html[data-theme="light"] {
+  --app-bg: #f6faf9;
+
+  --surface-0: var(--white);
+  --surface-1: rgba(47, 72, 88, var(--a-04));
+  --surface-2: rgba(47, 72, 88, var(--a-06));
+
+  --text-1: #0f172a;
+  --text-2: rgba(15, 23, 42, 0.74);
+  --text-3: rgba(15, 23, 42, 0.56);
+
+  --border-1: rgba(0, 143, 158, var(--a-20));
+  --border-2: rgba(0, 143, 158, var(--a-12));
+
+  --shadow-elev-2: 0 18px 45px rgba(0, 0, 0, 0.16);
 }
 
-.app-shell{
+/* ============================================================
+   THEME: Dark
+   (no mint wash; dark surfaces are neutral + inky)
+   ============================================================ */
+html[data-theme="dark"] {
+  --app-bg: #0b1418;
+
+  --surface-0: #0f1b22; /* card */
+  --surface-1: rgba(255, 255, 255, var(--a-06));
+  --surface-2: rgba(255, 255, 255, var(--a-08));
+
+  --text-1: rgba(255, 255, 255, 0.92);
+  --text-2: rgba(255, 255, 255, 0.76);
+  --text-3: rgba(255, 255, 255, 0.58);
+
+  --border-1: rgba(0, 180, 160, var(--a-28)); /* support, subtle */
+  --border-2: rgba(0, 180, 160, var(--a-16));
+
+  --shadow-elev-2: 0 20px 55px rgba(0, 0, 0, 0.55);
+  --shadow-brand-soft: 0 16px 40px rgba(0, 215, 136, 0.10);
+}
+
+/* ============================================================
+   Default: follow OS preference (only if no explicit data-theme)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    --app-bg: #0b1418;
+
+    --surface-0: #0f1b22;
+    --surface-1: rgba(255, 255, 255, var(--a-06));
+    --surface-2: rgba(255, 255, 255, var(--a-08));
+
+    --text-1: rgba(255, 255, 255, 0.92);
+    --text-2: rgba(255, 255, 255, 0.76);
+    --text-3: rgba(255, 255, 255, 0.58);
+
+    --border-1: rgba(0, 180, 160, var(--a-28));
+    --border-2: rgba(0, 180, 160, var(--a-16));
+
+    --shadow-elev-2: 0 20px 55px rgba(0, 0, 0, 0.55);
+    --shadow-brand-soft: 0 16px 40px rgba(0, 215, 136, 0.10);
+  }
+}
+
+/* ============================================================
+   Base layout
+   ============================================================ */
+body {
+  background: var(--app-bg);
+  color: var(--text-1);
+}
+
+.app-shell {
   min-height: 100vh;
   padding: 40px 16px;
 }
 
-.card-shell{
+.card-shell {
   margin: 0 auto;
   max-width: 1120px;
-  background: var(--surface);
-  border-radius: 28px;
+  background: var(--surface-0);
+  border-radius: var(--r-xl);
   overflow: visible;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-elev-2);
+  border: 1px solid var(--border-2);
 }
 
-.card-shell-inner{
+.card-shell-inner {
   overflow: hidden;
-  border-bottom-left-radius: 28px;
-  border-bottom-right-radius: 28px;
+  border-bottom-left-radius: var(--r-xl);
+  border-bottom-right-radius: var(--r-xl);
 }
 
-/* Section tint (subtle) */
-.section-tint{
-  background: var(--surface-soft);
+/* Subtle section separation */
+.section-tint {
+  background: var(--surface-2);
 }
+
+/* ============================================================
+   Components
+   ============================================================ */
 
 /* Buttons */
-.btn-primary{
-  background: var(--primary);
-  color: var(--text-inverted);
+.btn-primary {
+  background: var(--brand);
+  color: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--shadow-brand-soft);
+  transition:
+    transform var(--dur-fast-ms) var(--ease-standard),
+    background var(--dur-med-ms) var(--ease-standard),
+    box-shadow var(--dur-med-ms) var(--ease-standard),
+    filter var(--dur-med-ms) var(--ease-standard);
 }
 
-.btn-primary:hover{
-  filter: brightness(0.97);
+.btn-primary:hover {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  background: var(--brand-press);
+  transform: translateY(0px);
 }
 
 /* Pills */
-.pill{
-  background: var(--surface-soft);
-  border: 1px solid var(--border);
-  color: var(--text-primary);
+.pill {
+  background: var(--surface-1);
+  border: 1px solid var(--border-2);
+  color: var(--text-2);
   font-weight: 600;
+  border-radius: 999px;
 }
 
-.pill--feature{
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-primary);
-  font-weight: 600;
+.pill--feature {
+  background: transparent;
+  border: 1px solid var(--border-1);
+  color: var(--text-1);
+  font-weight: 650;
+  border-radius: 999px;
 }
 
-/* Standard borders (architect-approved) */
-.border-std{
-  border-color: var(--border);
+/* Utilities */
+.border-std {
+  border-color: var(--border-1);
 }
 
-/* Primary links */
-.link-primary{
-  color: var(--primary);
-  font-weight: 600;
+/* Links */
+.link-primary {
+  color: var(--link);
+  font-weight: 650;
 }
-.link-primary:hover{
+
+.link-primary:hover {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 
-/* Focus ring (accessible, accent is rare) */
-.focus-ring:focus-visible{
-  outline: 3px solid rgba(46, 246, 86, 0.55);
+/* Focus */
+.focus-ring:focus-visible {
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 215, 136, 0.22);
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary {
+    transition: none;
+  }
 }

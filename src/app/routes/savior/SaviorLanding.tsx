@@ -4,6 +4,7 @@ import { LandingHeader } from '../../../components/layout/LandingHeader';
 import './saviorLanding.css';
 
 export function SaviorLanding() {
+
   useEffect(() => {
     // Scope landing theme to this route only
     document.body.classList.add('savior-landing');
@@ -154,6 +155,26 @@ export function SaviorLanding() {
     };
   }, []);
 
+    useEffect(() => {
+      const navHeader = document.querySelector('body.savior-landing header'); // header du LandingHeader (le premier)
+      const hero = document.getElementById('savior-hero');
+
+      if (!(navHeader instanceof HTMLElement)) return;
+      if (!(hero instanceof HTMLElement)) return;
+
+      const onScroll = () => {
+        const heroBottom = hero.getBoundingClientRect().bottom;
+        const shouldStick = heroBottom <= 0;
+        navHeader.classList.toggle('is-sticky', shouldStick);
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+
   return (
     <>
       <LandingHeader
@@ -166,7 +187,7 @@ export function SaviorLanding() {
         ]}
       />
 
-      <header className="savior-hero">
+      <header className="savior-hero" id="savior-hero">
         <div className="wrap">
           <div className="hero">
             <h1>

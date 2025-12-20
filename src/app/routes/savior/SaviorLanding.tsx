@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { LandingFooter } from '../../../components/layout/LandingFooter';
 import { LandingHeader } from '../../../components/layout/LandingHeader';
 import './saviorLanding.css';
+import { saviorContent } from '../../../content/savior.ts';  
 
 export function SaviorLanding() {
 
@@ -156,7 +157,7 @@ export function SaviorLanding() {
   }, []);
 
     useEffect(() => {
-      const navHeader = document.querySelector('body.savior-landing header'); // header du LandingHeader (le premier)
+      const navHeader = document.querySelector('body.savior-landing header.landing-nav'); // header du LandingHeader (le premier)
       const hero = document.getElementById('savior-hero');
 
       if (!(navHeader instanceof HTMLElement)) return;
@@ -173,6 +174,14 @@ export function SaviorLanding() {
 
       return () => window.removeEventListener('scroll', onScroll);
     }, []);
+
+    const githubUrl = saviorContent.hero.ctaSecondary.href;
+
+    const docsUrl = saviorContent.links.items.find((i) => i.label === 'Documentation')?.href
+      ?? saviorContent.links.items.find((i) => i.label === 'GitHub repository')?.href
+      ?? githubUrl;
+
+    const testsUrl = saviorContent.reliability.links.find((l) => l.label === 'Testing in the repo')?.href ?? `${githubUrl}#testing`;
 
 
   return (
@@ -200,13 +209,15 @@ export function SaviorLanding() {
             </p>
 
             <div className="actions">
-              <a className="primary" href="#install">
-                Install
+              <a className="primary" href={saviorContent.hero.ctaPrimary.href}>
+                {saviorContent.hero.ctaPrimary.label}
               </a>
-              <a className="secondary" href="#">
-                View on GitHub
+
+              <a className="secondary" href={githubUrl} target="_blank" rel="noreferrer">
+                {saviorContent.hero.ctaSecondary.label}
               </a>
             </div>
+
 
             <div className="trust">
               <span>Dependency-free</span>
@@ -364,13 +375,14 @@ export function SaviorLanding() {
                 </p>
 
                 <div className="row">
-                  <a className="btn" href="#">
+                  <a className="btn" href={testsUrl} target="_blank" rel="noreferrer">
                     Open tests
                   </a>
-                  <a className="btn" href="#">
+                  <a className="btn" href={testsUrl} target="_blank" rel="noreferrer">
                     Manual suite
                   </a>
                 </div>
+
               </div>
             </div>
           </div>
@@ -385,7 +397,7 @@ export function SaviorLanding() {
             <div className="grid">
               <div className="card">
                 <div className="code" aria-label="Install command">
-                  <div>npm i @zippers/savior</div>
+                  <div>{saviorContent.install.command}</div>
                 </div>
 
                 <div className="code" aria-label="Usage snippet" style={{ marginTop: '1rem' }}>
@@ -419,14 +431,15 @@ export function SaviorLanding() {
                   Want edge cases, multi-form, drivers, or customization. Head to docs.
                 </p>
 
-                <div className="row">
-                  <a className="btn" href="#">
-                    Open docs
-                  </a>
-                  <a className="btn" href="#">
-                    GitHub
-                  </a>
-                </div>
+              <div className="row">
+                <a className="btn" href={docsUrl} target="_blank" rel="noreferrer">
+                  Open docs
+                </a>
+                <a className="btn" href={githubUrl} target="_blank" rel="noreferrer">
+                  GitHub
+                </a>
+              </div>
+
               </div>
             </div>
           </div>

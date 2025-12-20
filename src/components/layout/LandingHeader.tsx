@@ -7,11 +7,11 @@ type LandingHeaderProps = {
 
 export function LandingHeader({ brandLabel, links }: LandingHeaderProps) {
   return (
-    <header>
+    <header className="landing-nav">
       <div className="wrap">
         <div className="top">
           {/* Brand */}
-          <div className="logo" style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem' }}>
+          <div className="logo">
             <span
               style={{
                 fontSize: '1.15rem',

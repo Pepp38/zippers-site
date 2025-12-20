@@ -35,16 +35,17 @@ body.savior-landing .wrap {
   padding: 0 2rem;
 }
 
-body.savior-landing header {
-  padding: 4rem 0 0 0; 
-    position: relative;
+body.savior-landing header.landing-nav {
+  padding: 4rem 0 0; 
+  position: relative;
   transition:
     background 0.25s ease,
     box-shadow 0.25s ease,
     border-color 0.25s ease;
+    border-bottom: 1px solid transparent;
 }
 /* Header sticky */
-body.savior-landing header.is-sticky {
+body.savior-landing header.landing-nav.is-sticky {
   position: sticky;
   top: 0;
   z-index: 50;
@@ -71,22 +72,36 @@ body.savior-landing .top {
 }
 
 body.savior-landing .logo {
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  font-size: 0.85rem;
-  color: var(--primary);
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
 }
 
-body.savior-landing nav a {
+body.savior-landing .logo-main {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+body.savior-landing .logo-sub {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--muted-2);
+}
+
+
+body.savior-landing header.landing-nav nav a {
   margin-left: 2rem;
   font-size: 0.9rem;
   text-decoration: none;
   color: var(--muted);
 }
 
-body.savior-landing nav a:hover {
+body.savior-landing header.landing-nav nav a:hover {
   color: var(--text);
 }
+
 
 body.savior-landing .hero {
   max-width: 780px;
@@ -161,6 +176,7 @@ body.savior-landing .trust span::before {
 body.savior-landing section {
   padding: 4rem 0;
   border-bottom: 1px solid var(--border-soft);
+  scroll-margin-top: 150px;
 }
 
 body.savior-landing .kicker {
@@ -196,10 +212,11 @@ body.savior-landing .grid {
   body.savior-landing .grid {
     grid-template-columns: 1fr;
   }
-  body.savior-landing nav {
+  body.savior-landing header.landing-nav nav {
     display: none;
   }
 }
+
 
 body.savior-landing .card {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));

@@ -193,6 +193,7 @@ export function SaviorLanding() {
           { label: 'By design', href: '#by-design' },
           { label: 'Coverage', href: '#coverage' },
           { label: 'Install', href: '#install' },
+          { label: 'Blog', href: '/blog' },
         ]}
       />
 

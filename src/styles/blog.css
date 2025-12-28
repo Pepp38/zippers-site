@@ -1,21 +1,29 @@
+/* Zippers Blog — Light Reading Theme */
+
 :root {
-  --blog-bg: #0c1424;
-  --blog-surface: rgba(255, 255, 255, 0.035);
-  --blog-text: rgba(255, 255, 255, 0.92);
-  --blog-muted: rgba(255, 255, 255, 0.62);
-  --blog-border: rgba(255, 255, 255, 0.10);
+  /* Light canvas */
+  --blog-bg: #f6f8fb;             /* soft off-white */
+  --blog-surface: #ffffff;        /* cards */
+  --blog-text: rgba(12, 18, 28, 0.92);
+  --blog-muted: rgba(12, 18, 28, 0.62);
+  --blog-border: rgba(12, 18, 28, 0.10);
 
+  /* Zippers accent */
   --blog-accent: #00d788;
-  --blog-accent-soft: rgba(0, 215, 136, 0.14);
+  --blog-accent-soft: rgba(0, 215, 136, 0.16);
 
-  --blog-max-width: 820px;
+  /* Layout */
+  --blog-max-width: 860px;   /* listing */
+  --blog-post-width: 760px;  /* reading */
 }
+
+/* ===== Page shell ===== */
 
 .blogShell {
   min-height: 100vh;
   background:
-    radial-gradient(900px 600px at 15% 0%, rgba(0, 215, 136, 0.10), transparent 55%),
-    radial-gradient(900px 600px at 85% 15%, rgba(0, 215, 136, 0.06), transparent 55%),
+    radial-gradient(1100px 700px at 15% 0%, rgba(0, 215, 136, 0.10), transparent 55%),
+    radial-gradient(900px 600px at 85% 15%, rgba(27, 42, 56, 0.06), transparent 60%),
     var(--blog-bg);
   color: var(--blog-text);
 }
@@ -28,6 +36,14 @@
   font-size: 17px;
   line-height: 1.75;
 }
+
+/* Apply on BlogPost root: <div className="blogShell blogPostPage"> */
+.blogPostPage .blogContainer {
+  max-width: var(--blog-post-width);
+  padding: 28px 18px 86px;
+}
+
+/* ===== Top row ===== */
 
 .blogTop {
   display: flex;
@@ -52,28 +68,33 @@
   font-size: 12px;
   color: var(--blog-muted);
   border: 1px solid var(--blog-border);
-  padding: 4px 10px;
+  padding: 5px 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.60);
+  backdrop-filter: blur(6px);
 }
 
+/* ===== Headings + separators ===== */
+
 .blogH1 {
-  font-size: 34px;
-  line-height: 1.2;
+  font-size: 36px;
+  line-height: 1.18;
   letter-spacing: -0.01em;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
 
 .blogRule {
   height: 1px;
-  background: linear-gradient(90deg, var(--blog-accent), transparent 55%);
-  opacity: 0.6;
+  background: linear-gradient(90deg, var(--blog-accent), rgba(0, 0, 0, 0));
+  opacity: 0.9;
   margin: 14px 0 26px;
 }
 
 .blogMuted {
   color: var(--blog-muted);
 }
+
+/* ===== Listing (BlogIndex) ===== */
 
 .blogList {
   list-style: none;
@@ -83,7 +104,7 @@
 }
 
 .blogListItem {
-  padding: 16px 0;
+  padding: 18px 0;
   border-bottom: 1px solid var(--blog-border);
 }
 
@@ -100,7 +121,7 @@
 }
 
 .blogCardLink:hover .blogPostTitle {
-  color: var(--blog-accent);
+  color: rgba(0, 215, 136, 1);
 }
 
 .blogPostMeta {
@@ -115,43 +136,124 @@
 .blogExcerpt {
   margin: 0;
   color: var(--blog-muted);
+  max-width: 68ch;
 }
+
+/* ===== Post (BlogPost) ===== */
 
 .blogCover {
   width: 100%;
-  border-radius: 14px;
-  margin: 14px 0 18px 0;
   display: block;
+  border-radius: 16px;
+  margin: 18px 0 18px;
+  border: 1px solid var(--blog-border);
+  background: #fff;
 }
 
 .blogArticle {
+  background: var(--blog-surface);
   border: 1px solid var(--blog-border);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 22px 18px;
+  border-radius: 16px;
+  padding: 26px 22px;
+  box-shadow:
+    0 1px 0 rgba(12, 18, 28, 0.04),
+    0 10px 30px rgba(12, 18, 28, 0.06);
 }
 
-.blogArticle p {
-  margin: 14px 0;
+/* ===== Prose typography (wrap markdown output in .blogProse) ===== */
+
+.blogProse {
+  font-size: 18px;
+  line-height: 1.78;
+  color: rgba(12, 18, 28, 0.90);
 }
 
-.blogArticle ul {
-  margin: 14px 0;
-  padding-left: 18px;
+.blogProse p {
+  margin: 0 0 16px;
 }
 
-.blogArticle a {
-  color: var(--blog-text);
+.blogProse h2 {
+  font-size: 26px;
+  line-height: 1.2;
+  margin: 34px 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.blogProse h3 {
+  font-size: 20px;
+  line-height: 1.25;
+  margin: 24px 0 10px;
+}
+
+.blogProse a {
+  color: rgba(12, 18, 28, 0.92);
   text-decoration: underline;
-  text-decoration-thickness: 1px;
   text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
 }
 
-.blogArticle a:hover {
-  color: var(--blog-accent);
+.blogProse a:hover {
+  color: rgba(0, 215, 136, 1);
 }
+
+.blogProse ul,
+.blogProse ol {
+  margin: 0 0 16px;
+  padding-left: 22px;
+}
+
+.blogProse li {
+  margin: 6px 0;
+}
+
+.blogProse blockquote {
+  margin: 18px 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--blog-accent);
+  background: rgba(0, 215, 136, 0.08);
+  border-radius: 12px;
+  color: rgba(12, 18, 28, 0.84);
+}
+
+.blogProse pre {
+  margin: 18px 0;
+  padding: 14px;
+  border-radius: 12px;
+  overflow: auto;
+  border: 1px solid var(--blog-border);
+  background: rgba(12, 18, 28, 0.04);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.blogProse code {
+  font-size: 0.95em;
+}
+
+.blogProse hr {
+  margin: 28px 0;
+  border: none;
+  border-top: 1px solid var(--blog-border);
+  opacity: 0.9;
+}
+
+/* ===== Mobile ===== */
 
 @media (max-width: 520px) {
-  .blogContainer { padding-top: 40px; font-size: 16px; }
-  .blogH1 { font-size: 28px; }
+  .blogContainer {
+    padding-top: 40px;
+    font-size: 16px;
+  }
+
+  .blogH1 {
+    font-size: 28px;
+  }
+
+  .blogProse {
+    font-size: 17px;
+  }
+
+  .blogArticle {
+    padding: 20px 16px;
+  }
 }

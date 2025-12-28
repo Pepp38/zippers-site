@@ -10,7 +10,7 @@ export function BlogPost() {
 
   if (!post) {
     return (
-      <div className="blogShell">
+      <div className="blogShell blogPostPage">
         <div className="blogContainer">
           <div className="blogTop">
             <Link className="blogHomeLink" to="/blog">← Back to Blog</Link>
@@ -29,7 +29,7 @@ export function BlogPost() {
     : undefined;
 
   return (
-    <div className="blogShell">
+    <div className="blogShell blogPostPage">
       <div className="blogContainer">
         <div className="blogTop">
           <Link className="blogHomeLink" to="/blog">← Back to Blog</Link>
@@ -47,11 +47,13 @@ export function BlogPost() {
             loading="lazy"
           />
         ) : null}
-
+        
         <article className="blogArticle">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {post.markdown}
-          </ReactMarkdown>
+          <div className="blogProse">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {post.markdown}
+            </ReactMarkdown>
+          </div>
         </article>
       </div>
     </div>

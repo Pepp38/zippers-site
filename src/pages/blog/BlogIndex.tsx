@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { getAllPostsSorted } from "../../blog/posts";
+import { loadPublishedSummaries } from "../../blog/loadPosts";
 import "../../styles/blog.css";
 
 function formatDate(dateISO: string): string {
@@ -8,7 +8,7 @@ function formatDate(dateISO: string): string {
 }
 
 export function BlogIndex() {
-  const posts = getAllPostsSorted();
+  const posts = loadPublishedSummaries();
 
   return (
     <div className="blogShell">
@@ -27,9 +27,9 @@ export function BlogIndex() {
               <Link className="blogCardLink" to={`/blog/${p.slug}`}>
                 <div className="blogPostTitle">{p.title}</div>
                 <div className="blogPostMeta">
-                  <span>{formatDate(p.dateISO)}</span>
+                  <span>{formatDate(p.date)}</span>
                 </div>
-                <p className="blogExcerpt">{p.excerpt}</p>
+                <p className="blogExcerpt">{p.description}</p>
               </Link>
             </li>
           ))}

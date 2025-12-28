@@ -1,10 +1,12 @@
 import { Link, useParams } from "react-router-dom";
-import { getPostBySlug } from "../../blog/posts";
+import { getPublishedPostBySlug } from "../../blog/loadPosts";
 import "../../styles/blog.css";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export function BlogPost() {
   const { slug } = useParams();
-  const post = slug ? getPostBySlug(slug) : undefined;
+  const post = slug ? getPublishedPostBySlug(slug) : undefined;
 
   if (!post) {
     return (
@@ -22,21 +24,35 @@ export function BlogPost() {
     );
   }
 
+  const coverImageUrl = post.frontMatter.cover_image
+    ? `${import.meta.env.BASE_URL}${post.frontMatter.cover_image.replace(/^\/+/, "")}`
+    : undefined;
+
   return (
     <div className="blogShell">
       <div className="blogContainer">
         <div className="blogTop">
           <Link className="blogHomeLink" to="/blog">← Back to Blog</Link>
-          <span className="blogBadge">{post.dateISO}</span>
+          <span className="blogBadge">{post.frontMatter.date}</span>
         </div>
 
-        <h1 className="blogH1">{post.title}</h1>
+        <h1 className="blogH1">{post.frontMatter.title}</h1>
         <div className="blogRule" />
 
-        <article
-          className="blogArticle"
-          dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-        />
+        {coverImageUrl ? (
+          <img
+            className="blogCover"
+            src={coverImageUrl}
+            alt={post.frontMatter.title}
+            loading="lazy"
+          />
+        ) : null}
+
+        <article className="blogArticle">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {post.markdown}
+          </ReactMarkdown>
+        </article>
       </div>
     </div>
   );

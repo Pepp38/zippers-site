@@ -446,6 +446,31 @@ export function SaviorLanding() {
           </div>
         </section>
 
+        <section id="premium">
+          <div className="wrap">
+            <p className="kicker">Premium</p>
+            <h2 className="section-title">Need stronger guarantees?</h2>
+            <p className="section-sub">
+              Savior Core stays open source. Premium modules extend it with explicit contracts and focused behavior for edge cases.
+            </p>
+
+            <div className="card" style={{ marginTop: '1.2rem' }}>
+              <div className="row" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <strong>Savior Premium</strong>
+                  <div className="hint" style={{ marginTop: '0.4rem' }}>
+                    Browse modules and details.
+                  </div>
+                </div>
+
+                <a className="btn" href="/savior/premium">
+                  View Premium
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <LandingFooter text="© Savior. Local-first draft recovery for forms." />
       </main>
     </>

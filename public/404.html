@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zippers</title>
+  </head>
+  <body>
+    <script>
+      // GitHub Pages SPA fallback:
+      // Redirect unknown routes to /?p=<full-path> so index.html can restore it.
+      var path = location.pathname + location.search + location.hash;
+      location.replace("/?p=" + encodeURIComponent(path));
+    </script>
+  </body>
+</html>

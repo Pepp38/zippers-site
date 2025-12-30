@@ -18,7 +18,25 @@
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/og.png" />
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <script>
+      // GH Pages SPA fallback.
+      // If we were redirected from /404.html to /?p=<originalPath>, restore the route.
+      (function () {
+        var url = new URL(window.location.href);
+        var p = url.searchParams.get('p');
+        if (!p) return;
+
+        // Decode and restore the original path.
+        var restored = decodeURIComponent(p);
+        window.history.replaceState(null, '', restored);
+
+        // Clean the query param so the URL stays canonical.
+        url.searchParams.delete('p');
+        window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

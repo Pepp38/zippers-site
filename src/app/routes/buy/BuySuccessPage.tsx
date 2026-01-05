@@ -1,4 +1,4 @@
-import { useSearchParams, useParams, Link } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 export function BuySuccessPage() {
   const { sku } = useParams<{ sku: string }>();
@@ -6,19 +6,38 @@ export function BuySuccessPage() {
   const sessionId = searchParams.get('session_id');
 
   return (
-    <main style={{ padding: 24, maxWidth: 640 }}>
-      <h1>Payment confirmed.</h1>
-      <p>Thank you. Your payment was completed.</p>
+    <main className="mx-auto max-w-2xl">
+      <h1 className="text-3xl font-semibold tracking-tight">Payment confirmed.</h1>
+      <p className="mt-2 text-slate-200/90">Thank you. Your payment was completed.</p>
 
-      <p>Next step: accept the GitHub invitation.</p>
+      <p className="mt-4 text-slate-200/90">Next step: accept the GitHub invitation.</p>
 
       {sessionId ? (
-        <p style={{ opacity: 0.8, fontSize: 14 }}>Session: {sessionId}</p>
+        <p className="mt-4 text-sm text-slate-200/70">Session: {sessionId}</p>
       ) : null}
 
-      <p style={{ marginTop: 16 }}>
-        <Link to={`/buy/${sku ?? ''}`}>Back</Link>
-      </p>
+      <div className="mt-8 flex flex-wrap gap-4">
+        <Link
+          to="/savior"
+          className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium hover:bg-white/15"
+        >
+          Back to Savior
+        </Link>
+
+        <Link
+          to="/premium/safestate-recovery"
+          className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
+        >
+          Premium page
+        </Link>
+
+        <Link
+          to={`/buy/${sku ?? ''}`}
+          className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
+        >
+          Back to Buy
+        </Link>
+      </div>
     </main>
   );
 }

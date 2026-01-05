@@ -193,6 +193,7 @@ export function SaviorLanding() {
           { label: 'By design', href: '#by-design' },
           { label: 'Coverage', href: '#coverage' },
           { label: 'Install', href: '#install' },
+          { label: 'Premium', href: '/premium/safestate-recovery' },
           { label: 'Blog', href: '/blog' },
         ]}
       />
@@ -442,6 +443,22 @@ export function SaviorLanding() {
               </div>
 
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="premium">
+          <div className="wrap">
+            <p className="kicker">Premium</p>
+            <h2 className="section-title">Controlled recovery for failure scenarios.</h2>
+            <p className="section-sub">
+              Need a controlled recovery path for edge cases, incidents, or corrupted drafts. SafeState Recovery adds a safe restore layer on top of Savior Core.
+            </p>
+
+            <div className="row">
+              <a className="btn" href="/premium/safestate-recovery">
+                See SafeState Recovery
+              </a>
             </div>
           </div>
         </section>

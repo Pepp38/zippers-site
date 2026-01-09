@@ -93,9 +93,6 @@ export function SaviorLanding() {
 
         if (!textEl || !emailEl || !passwordEl) return;
 
-        // Exclude password fields by design (explicit no-op)
-        passwordEl.value = passwordEl.value;
-
         writeDraft({
           message: textEl.value,
           email: emailEl.value,
@@ -193,7 +190,7 @@ export function SaviorLanding() {
           { label: 'By design', href: '#by-design' },
           { label: 'Coverage', href: '#coverage' },
           { label: 'Install', href: '#install' },
-          { label: 'Premium', href: '/premium/safestate-recovery' },
+          { label: 'SafeState Recovery', href: '/premium/safestate-recovery' },
           { label: 'Blog', href: '/blog' },
         ]}
       />
@@ -380,9 +377,6 @@ export function SaviorLanding() {
                   <a className="btn" href={testsUrl} target="_blank" rel="noreferrer">
                     Open tests
                   </a>
-                  <a className="btn" href={testsUrl} target="_blank" rel="noreferrer">
-                    Manual suite
-                  </a>
                 </div>
 
               </div>
@@ -398,23 +392,26 @@ export function SaviorLanding() {
 
             <div className="grid">
               <div className="card">
-                <div className="code" aria-label="Install command">
-                  <div>{saviorContent.install.command}</div>
-                </div>
-
-                <div className="code" aria-label="Usage snippet" style={{ marginTop: '1rem' }}>
-                  <div>
-                    <span className="dim">// JS</span>
+                <div className="stack">
+                  <div className="code" aria-label="Install command">
+                    <div>{saviorContent.install.command}</div>
                   </div>
-                  <div>import &#123; Savior &#125; from '@zippers/savior'</div>
-                  <div>&nbsp;</div>
-                  <div>const formEl = document.querySelector('form')</div>
-                  <div>const savior = new Savior(&#123; form: formEl &#125;)</div>
-                  <div>savior.init()</div>
+
+                  <div className="code" aria-label="Usage snippet">
+                    <div>
+                      <span className="dim">// JS</span>
+                    </div>
+                    <div>import Savior from '@zippers/savior'</div>
+                    <div>&nbsp;</div>
+                    <div>const result = Savior.init(&#123; selector: 'form[data-savior]' &#125;);</div>
+                    <div>if (!result.ok) &#123;</div>
+                    <div>&nbsp;&nbsp;console.warn('Savior init failed:', result.reason);</div>
+                    <div>&#125;</div>
+                  </div>
                 </div>
 
                 <p className="hint" style={{ marginTop: '1rem' }}>
-                  Works with any form, any framework. No markup changes required.
+                  Works with any form, any framework. Minimal markup required.
                 </p>
               </div>
 
@@ -433,26 +430,27 @@ export function SaviorLanding() {
                   Want edge cases, multi-form, drivers, or customization. Head to docs.
                 </p>
 
-              <div className="row">
-                <a className="btn" href={docsUrl} target="_blank" rel="noreferrer">
-                  Open docs
-                </a>
-                <a className="btn" href={githubUrl} target="_blank" rel="noreferrer">
-                  GitHub
-                </a>
-              </div>
-
+                <div className="row">
+                  <a className="btn" href={docsUrl} target="_blank" rel="noreferrer">
+                    Open docs
+                  </a>
+                  <a className="btn" href={githubUrl} target="_blank" rel="noreferrer">
+                    GitHub
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="premium">
+
+        <section id="safestate">
           <div className="wrap">
-            <p className="kicker">Premium</p>
+            <p className="kicker">SafeState Recovery</p>
             <h2 className="section-title">Controlled recovery for failure scenarios.</h2>
             <p className="section-sub">
-              Need a controlled recovery path for edge cases, incidents, or corrupted drafts. SafeState Recovery adds a safe restore layer on top of Savior Core.
+              SafeState Recovery adds a controlled, deterministic restore layer for edge cases, incidents, and corrupted drafts.
+              Built on top of Savior Core.
             </p>
 
             <div className="row">

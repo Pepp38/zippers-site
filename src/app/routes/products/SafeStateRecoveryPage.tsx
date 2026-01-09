@@ -63,14 +63,9 @@ export function SafeStateRecoveryPage() {
         </p>
       </section>
 
-      <section className="mt-10 rounded-2xl border border-white/10 bg-white/5 p-5">
-        <h2 className="text-base font-semibold text-white">Requires</h2>
-        <p className="mt-2 text-slate-200/90">Requires Savior Core (free).</p>
-      </section>
-
       <div className="mt-10 flex flex-col gap-4">
         <Link
-          to="/buy/savior-premium-safestate-recovery"
+          to="/buy/savior-safestate-recovery"
           className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15"
         >
           Buy SafeState Recovery

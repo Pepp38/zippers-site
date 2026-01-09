@@ -25,10 +25,10 @@ export function BuySuccessPage() {
         </Link>
 
         <Link
-          to="/premium/safestate-recovery"
+          to="/products/safestate-recovery"
           className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
         >
-          Premium page
+          Product page
         </Link>
 
         <Link

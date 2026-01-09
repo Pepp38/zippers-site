@@ -190,7 +190,7 @@ export function SaviorLanding() {
           { label: 'By design', href: '#by-design' },
           { label: 'Coverage', href: '#coverage' },
           { label: 'Install', href: '#install' },
-          { label: 'SafeState Recovery', href: '/premium/safestate-recovery' },
+          { label: 'SafeState Recovery', href: '/products/safestate-recovery' },
           { label: 'Blog', href: '/blog' },
         ]}
       />
@@ -454,7 +454,7 @@ export function SaviorLanding() {
             </p>
 
             <div className="row">
-              <a className="btn" href="/premium/safestate-recovery">
+              <a className="btn" href="/products/safestate-recovery">
                 See SafeState Recovery
               </a>
             </div>

@@ -73,13 +73,6 @@ export function BuyPage() {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">Requires</h2>
-            <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-200/90">
-              <li>Savior Core (free)</li>
-            </ul>
-          </div>
-
-          <div>
             <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">Delivery</h2>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-200/90">
               <li>Immediate access after payment (via GitHub invite)</li>
@@ -120,10 +113,10 @@ export function BuyPage() {
 
         <div className="mt-4">
           <Link
-            to="/premium/safestate-recovery"
+            to="/products/safestate-recovery"
             className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
           >
-            Back to Premium page
+            Back to product page
           </Link>
         </div>
       </section>

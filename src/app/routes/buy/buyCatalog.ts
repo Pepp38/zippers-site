@@ -1,4 +1,4 @@
-export type BuySku = 'savior-premium-safestate-recovery';
+export type BuySku = 'savior-safestate-recovery';
 
 export type BuyCatalogItem = {
   sku: BuySku;
@@ -6,12 +6,12 @@ export type BuyCatalogItem = {
 };
 
 export const buyCatalog: Record<BuySku, BuyCatalogItem> = {
-  'savior-premium-safestate-recovery': {
-    sku: 'savior-premium-safestate-recovery',
+  'savior-safestate-recovery': {
+    sku: 'savior-safestate-recovery',
     title: 'SafeState Recovery',
   },
 };
 
 export function isBuySku(value: string): value is BuySku {
-  return value === 'savior-premium-safestate-recovery';
+  return value === 'savior-safestate-recovery';
 }

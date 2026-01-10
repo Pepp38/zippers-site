@@ -3,8 +3,12 @@ import { getAllPostsSorted } from "../../blog/posts";
 import "../../styles/blog.css";
 
 function formatDate(dateISO: string): string {
-  // keep it simple: YYYY-MM-DD
-  return dateISO;
+  const dt = new Date(`${dateISO}T00:00:00`);
+  return dt.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 export function BlogIndex() {
@@ -12,29 +16,66 @@ export function BlogIndex() {
 
   return (
     <div className="blogShell">
-      <div className="blogContainer">
-        <div className="blogTop">
-          <Link className="blogHomeLink" to="/">← Back to Zippers</Link>
-          <span className="blogBadge">Blog</span>
+      <header className="blogHeader">
+        <div className="blogIndexTop">
+          <Link className="blogIndexBack" to="/">
+            ← Back to Zippers
+          </Link>
         </div>
 
-        <h1 className="blogH1">Blog</h1>
-        <div className="blogRule" />
+        <Link className="blogBrandLink" to="/blog">
+          <span className="blogBrandMark" aria-hidden>
+            {/* Temporary inline brand mark (replace later) */}
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 7.5C6 6.12 7.12 5 8.5 5H18.5C19.88 5 21 6.12 21 7.5V16.5C21 17.88 19.88 19 18.5 19H8.5C7.12 19 6 17.88 6 16.5V7.5Z"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <path
+                d="M3 9V15"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+          <span className="blogBrandText">Zippers Blog</span>
+        </Link>
 
-        <ul className="blogList">
-          {posts.map((p) => (
-            <li key={p.slug} className="blogListItem">
-              <Link className="blogCardLink" to={`/blog/${p.slug}`}>
-                <div className="blogPostTitle">{p.title}</div>
-                <div className="blogPostMeta">
-                  <span>{formatDate(p.dateISO)}</span>
+        <div className="blogMeta">A quiet library of long-form notes.</div>
+      </header>
+
+      <div className="blogDivider" />
+
+      <main className="blogMain">
+        <div className="blogLibrary">
+          <ul className="blogLibraryList">
+            {posts.map((p) => (
+              <li key={p.slug} className="blogLibraryItem">
+                <div className="blogLibraryRow">
+                  <div className="blogLibraryLeft">
+                    <div className="blogLibraryTitle">{p.title}</div>
+                    <div className="blogLibraryMeta">{formatDate(p.dateISO)}</div>
+                    <p className="blogLibraryExcerpt">{p.excerpt}</p>
+                  </div>
+                  <div className="blogLibraryRight">
+                    <Link className="blogLibraryRead" to={`/blog/${p.slug}`}>
+                      Read
+                    </Link>
+                  </div>
                 </div>
-                <p className="blogExcerpt">{p.excerpt}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </main>
     </div>
   );
 }

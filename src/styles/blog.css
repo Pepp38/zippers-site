@@ -34,6 +34,13 @@
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 
+.blogLogo {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
+
 .blogIndexTop {
   display: flex;
   justify-content: flex-start;

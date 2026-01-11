@@ -78,42 +78,6 @@ export const blogPosts: BlogPost[] = [
     "<p>Learn more at <strong>zippers.dev</strong>.</p>",
   ].join("\n"),
 },
-
-  {
-    slug: "writing-once-choosing-platform",
-    title: "Writing Once, Choosing a Platform",
-    dateISO: "2025-01-08",
-    excerpt: "Canonical source here. Everything else is a mirror.",
-    authorName: "PL",
-    readingTimeText: "2 min read",
-    microhook: "Write once. Publish everywhere. But keep a single source of truth.",
-    quoteText: "The map is not the territory.",
-    quoteAuthor: "Alfred Korzybski",
-    contentHtml: [
-      "<p>Another placeholder.</p>",
-      "<p>This blog is the canonical source.<br>Everything else is a mirror.</p>",
-    ].join("\n"),
-  },
-  {
-    slug: "what-a-serious-project-asks-of-you",
-    title: "What a Serious Project Asks of You",
-    dateISO: "2025-01-12",
-    excerpt: "A placeholder post to validate structure and flow.",
-    authorName: "PL",
-    readingTimeText: "3 min read",
-    microhook: "Serious projects ask for consistency, not bursts of heroism.",
-    quoteText: "Simplicity is prerequisite for reliability.",
-    quoteAuthor: "Edsger W. Dijkstra",
-    contentHtml: [
-      "<p>This is a placeholder article.</p>",
-      "<p>It exists to validate:</p>",
-      "<ul>",
-      "<li>markdown rendering</li>",
-      "<li>URL structure</li>",
-      "<li>canonical publishing flow</li>",
-      "</ul>",
-    ].join("\n"),
-  },
 ];
 
 export function getAllPostsSorted(): BlogPost[] {

@@ -3,6 +3,7 @@ import { LandingFooter } from '../../../components/layout/LandingFooter';
 import { LandingHeader } from '../../../components/layout/LandingHeader';
 import './saviorLanding.css';
 import { saviorContent } from '../../../content/savior.ts';  
+import { Link } from 'react-router-dom';
 
 export function SaviorLanding() {
 
@@ -450,13 +451,12 @@ export function SaviorLanding() {
             <h2 className="section-title">Controlled recovery for failure scenarios.</h2>
             <p className="section-sub">
               SafeState Recovery adds a controlled, deterministic restore layer for edge cases, incidents, and corrupted drafts.
-              Built on top of Savior Core.
             </p>
 
             <div className="row">
-              <a className="btn" href="/products/safestate-recovery">
+              <Link className="btn" to="/products/safestate-recovery">
                 See SafeState Recovery
-              </a>
+              </Link>
             </div>
           </div>
         </section>

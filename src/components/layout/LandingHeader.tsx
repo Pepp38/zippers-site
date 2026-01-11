@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 type LandingLink = { label: string; href: string };
 
 type LandingHeaderProps = {
@@ -35,11 +37,17 @@ export function LandingHeader({ brandLabel, links }: LandingHeaderProps) {
 
           {/* Nav */}
           <nav>
-            {links.map((l) => (
-              <a key={l.href} href={l.href}>
-                {l.label}
-              </a>
-            ))}
+            {links.map((l) =>
+              l.href.startsWith('/') ? (
+                <Link key={l.href} to={l.href}>
+                  {l.label}
+                </Link>
+              ) : (
+                <a key={l.href} href={l.href}>
+                  {l.label}
+                </a>
+              )
+            )}
           </nav>
         </div>
       </div>

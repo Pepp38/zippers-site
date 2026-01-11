@@ -53,13 +53,18 @@ export function BuyPage() {
 
   return (
     <main className="mx-auto max-w-2xl">
-      <header className="space-y-2">
+      <header className="space-y-3">
         <h1 className="text-3xl font-semibold tracking-tight">Buy {item.title}</h1>
-        <div className="max-w-3xl mx-auto px-6 space-y-12">
-          <p>One-time purchase.</p>
-          <p>Delivered via GitHub invite to a private repository.</p>
-        </div>
+
+        <p className="text-sm font-medium text-slate-200/90">
+          $69 USD · one-time purchase
+        </p>
+
+        <p className="text-slate-200/90">
+          Delivered via GitHub invite to a private repository.
+        </p>
       </header>
+
 
       <section className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
         <div className="space-y-6">

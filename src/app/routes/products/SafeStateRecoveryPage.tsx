@@ -22,6 +22,10 @@ export function SafeStateRecoveryPage() {
           autosave cannot handle.
         </p>
         <p className="text-slate-200/90">
+          Works standalone. Can also be used alongside Savior Core.
+        </p>
+
+        <p className="text-slate-200/90">
           It exists for teams who have already experienced the cost of silent data loss: lost user
           input, abandoned forms, support tickets, and irreversible user frustration.
         </p>
@@ -63,6 +67,11 @@ export function SafeStateRecoveryPage() {
         </p>
       </section>
 
+      <p className="mt-8 text-sm font-medium text-slate-200/90">
+      $69 USD · one-time purchase
+      </p>
+
+
       <div className="mt-10 flex flex-col gap-4">
         <Link
           to="/buy/savior-safestate-recovery"
@@ -75,7 +84,7 @@ export function SafeStateRecoveryPage() {
           to="/savior"
           className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
         >
-          Back to Savior Core
+          Back to Savior 
         </Link>
       </div>
     </main>

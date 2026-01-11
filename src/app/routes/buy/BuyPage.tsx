@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { createCheckoutSession } from '../../../lib/apiClient';
 import { buyCatalog, isBuySku } from './buyCatalog';
 
@@ -44,69 +44,82 @@ export function BuyPage() {
 
   if (!item) {
     return (
-      <main style={{ padding: 24 }}>
-        <h1>Buy</h1>
-        <p>Unknown product.</p>
+      <main className="mx-auto max-w-2xl">
+        <h1 className="text-2xl font-semibold">Buy</h1>
+        <p className="mt-2 text-slate-200/90">Unknown product.</p>
       </main>
     );
   }
 
   return (
-    <main style={{ padding: 24, maxWidth: 560 }}>
-      <h1 style={{ marginBottom: 8 }}>Buy {item.title}</h1>
-      <p style={{ marginTop: 0, opacity: 0.85 }}>
-        Enter your GitHub username. You will be redirected to Stripe Checkout.
-      </p>
+    <main className="mx-auto max-w-2xl">
+      <header className="space-y-2">
+        <h1 className="text-3xl font-semibold tracking-tight">Buy {item.title}</h1>
+        <div className="max-w-3xl mx-auto px-6 space-y-12">
+          <p>One-time purchase.</p>
+          <p>Delivered via GitHub invite to a private repository.</p>
+        </div>
+      </header>
 
-      <label style={{ display: 'block', marginTop: 16, marginBottom: 8 }}>
-        GitHub username
-      </label>
-      <input
-        value={githubUsername}
-        onChange={(e) => setGithubUsername(e.target.value)}
-        placeholder="plc-creates"
-        autoCapitalize="none"
-        autoCorrect="off"
-        spellCheck={false}
-        style={{
-          width: '100%',
-          padding: 10,
-          borderRadius: 8,
-          border: '1px solid rgba(255,255,255,0.15)',
-          background: 'rgba(0,0,0,0.15)',
-          color: 'inherit',
-        }}
-      />
+      <section className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">What you get</h2>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-200/90">
+              <li>Private repo access</li>
+              <li>Documentation and examples</li>
+              <li>Updates included (v1 scope)</li>
+            </ul>
+          </div>
 
-      <div style={{ marginTop: 12, fontSize: 14, opacity: 0.85 }}>
-        {githubUsername.length > 0 && !isGithubValid ? (
-          <span>Invalid GitHub username.</span>
-        ) : (
-          <span>&nbsp;</span>
-        )}
-      </div>
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">Delivery</h2>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-200/90">
+              <li>Immediate access after payment (via GitHub invite)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-      {errorMessage ? (
-        <p style={{ marginTop: 12 }}>{errorMessage}</p>
-      ) : (
-        <div style={{ height: 12 }} />
-      )}
+      <section className="mt-8">
+        <label className="block text-sm font-medium text-slate-200" htmlFor="githubUsername">
+          GitHub username
+        </label>
+        <input
+          id="githubUsername"
+          value={githubUsername}
+          onChange={(e) => setGithubUsername(e.target.value)}
+          placeholder="plc-creates"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-slate-100 placeholder:text-slate-200/40 focus:outline-none focus:ring-2 focus:ring-white/15"
+        />
 
-      <button
-        onClick={onContinue}
-        disabled={!canSubmit}
-        style={{
-          marginTop: 8,
-          padding: '10px 14px',
-          borderRadius: 10,
-          border: '1px solid rgba(255,255,255,0.2)',
-          background: canSubmit ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
-          color: 'inherit',
-          cursor: canSubmit ? 'pointer' : 'not-allowed',
-        }}
-      >
-        {isSubmitting ? 'Starting checkout…' : 'Continue to payment'}
-      </button>
+        <div className="mt-2 min-h-[1.25rem] text-sm text-slate-200/80">
+          {githubUsername.length > 0 && !isGithubValid ? <span>Invalid GitHub username.</span> : null}
+        </div>
+
+        {errorMessage ? <p className="mt-2 text-sm text-slate-100">{errorMessage}</p> : null}
+
+        <button
+          onClick={onContinue}
+          disabled={!canSubmit}
+          className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isSubmitting ? "Starting checkout…" : "Continue to payment"}
+        </button>
+
+
+        <div className="mt-4">
+          <Link
+            to="/products/safestate-recovery"
+            className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
+          >
+            Back to product page
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }

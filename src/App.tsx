@@ -6,6 +6,7 @@ import { BuyCancelPage } from './app/routes/buy/BuyCancelPage';
 import { BlogIndex } from './pages/blog/BlogIndex';
 import { BlogPost } from './pages/blog/BlogPost';
 import { SaviorShell } from './app/layout/SaviorShell';
+import { SafeStateRecoveryPage } from './app/routes/products/SafeStateRecoveryPage';
 
 export default function App() {
   return (
@@ -14,6 +15,9 @@ export default function App() {
       <Route element={<SaviorShell />}>
         <Route path="/" element={<SaviorLanding />} />
         <Route path="/savior" element={<SaviorLanding />} />
+
+        {/* Products */}
+        <Route path="/products/safestate-recovery" element={<SafeStateRecoveryPage />} />
 
         {/* Buy flow */}
         <Route path="/buy/:sku" element={<BuyPage />} />

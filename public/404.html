@@ -8,9 +8,12 @@
   <body>
     <script>
       (function () {
+        var pathSegmentsToKeep = 0; // 0 = custom domain root, 1 = /repo on github.io
         var l = window.location;
+        var segments = l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/');
+        var base = segments.endsWith('/') ? segments : segments + '/';
         var path = l.pathname + l.search + l.hash;
-        l.replace(l.origin + "/?p=" + encodeURIComponent(path));
+        l.replace(l.origin + base + '?p=' + encodeURIComponent(path.replace(base.replace(/\/$/, ''), '')));
       })();
     </script>
   </body>

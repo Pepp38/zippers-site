@@ -4,37 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- SPA deep-link restore (GitHub Pages compatible) -->
     <script>
-  (function () {
-    var params = new URLSearchParams(window.location.search);
-    var p = params.get("p");
-    if (p) {
-      try {
-        history.replaceState(null, "", decodeURIComponent(p));
-      } catch {}
-    }
-  })();
-</script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var p = params.get("p");
+        if (!p) return;
 
+        try {
+          var base = "%BASE_URL%".replace(/\/$/, "");
+          history.replaceState(null, "", base + decodeURIComponent(p));
+        } catch {}
+      })();
+    </script>
 
     <title>Savior | Automatic Form Draft Recovery</title>
+
     <meta
       name="description"
       content="Savior is a tiny, dependency-free autosave engine for HTML forms. It restores drafts after refresh, navigation, or crashes."
     />
 
+    <!-- Open Graph -->
     <meta property="og:title" content="Savior | Automatic Form Draft Recovery" />
     <meta
       property="og:description"
       content="A tiny, dependency-free autosave engine for HTML forms. Restore drafts after refresh, navigation, tab close, or crashes."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/og.png" />
+    <meta property="og:image" content="%BASE_URL%og.png" />
 
-<link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
   </head>
+
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Vite entry (resolved at build time) -->
+    <script type="module" src="%BASE_URL%src/main.tsx"></script>
   </body>
 </html>

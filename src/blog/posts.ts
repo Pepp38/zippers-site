@@ -7,18 +7,14 @@ export type BlogPostAuthor = {
 export type BlogPost = {
   slug: string;
   title: string;
-  dateISO: string;
+  dateISO: string; // YYYY-MM-DD
   excerpt: string;
-  author: {
-    name: "Pierre-Luc Carignan",
-    tagline: "Creator of Savior",
-    website: "zippers.dev",
-  },
-  readingTimeText: string;
+  author: BlogPostAuthor;
+  readingTimeText: string; // e.g. "9 min read"
   microhook: string;
   quoteText: string;
   quoteAuthor: string;
-  contentHtml: string;
+  contentHtml: string; // (no microhook, no title, no quote)
 };
 
 export const blogPosts: BlogPost[] = [
@@ -28,9 +24,11 @@ export const blogPosts: BlogPost[] = [
   dateISO: "2026-01-10",
   excerpt:
     "A short essay about silent data loss, normal user behavior, and the problems product metrics don’t see. Savior exists to protect user-entered form data from the quiet failures that rarely show up in dashboards.",
-  authorName: "Pierre-Luc Carignan
-Creator of Savior
-zippers.dev",
+    author: {
+      name: "Pierre-Luc Carignan",
+      tagline: "Creator of Savior",
+      website: "zippers.dev",
+    },
   readingTimeText: "3 min read",
   microhook:
     "A short essay about silent data loss, normal user behavior, and the problems product metrics don’t see.",

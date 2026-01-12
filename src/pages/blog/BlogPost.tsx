@@ -73,7 +73,7 @@ export function BlogPost() {
         </Link>
 
         <div className="blogMeta">
-          {post.authorName} · {dateLong} · {post.readingTimeText}
+          {post.author.name} · {dateLong} · {post.readingTimeText}
         </div>
       </header>
 

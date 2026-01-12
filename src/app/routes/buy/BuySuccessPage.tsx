@@ -31,11 +31,15 @@ export function BuySuccessPage() {
           </ul>
         </div>
 
-        {sessionId ? (
-          <p className="mt-4 text-sm text-slate-200/70">Reference: {sessionId}</p>
+        {sessionId || sku ? (
+          <p className="mt-4 text-sm text-slate-200/70">
+            {sessionId ? <>Reference: {sessionId}</> : null}
+            {sessionId && sku ? " · " : null}
+            {sku ? <>Product: {sku}</> : null}
+          </p>
         ) : null}
-      </section>
-
+        </section>
+      
       <div className="mt-8 flex flex-wrap gap-4">
         <a
           href="https://github.com/notifications"

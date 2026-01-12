@@ -7,10 +7,11 @@
   </head>
   <body>
     <script>
-      // GitHub Pages SPA fallback:
-      // Redirect unknown routes to /?p=<full-path> so index.html can restore it.
-      var path = location.pathname + location.search + location.hash;
-      location.replace("/?p=" + encodeURIComponent(path));
+      (function () {
+        var l = window.location;
+        var path = l.pathname + l.search + l.hash;
+        l.replace(l.origin + "/?p=" + encodeURIComponent(path));
+      })();
     </script>
   </body>
 </html>

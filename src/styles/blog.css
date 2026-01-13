@@ -13,76 +13,44 @@
   --blog-article-width: 760px;
 }
 
+/* =========================
+   Shell
+========================= */
+
 .blogShell {
   min-height: 100vh;
   background:
-    radial-gradient(900px 600px at 15% 0%, rgba(0, 215, 136, 0.12), transparent 55%),
-    radial-gradient(900px 600px at 85% 15%, rgba(0, 215, 136, 0.06), transparent 55%),
+    radial-gradient(
+      900px 600px at 15% 0%,
+      rgba(0, 215, 136, 0.12),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px 600px at 85% 15%,
+      rgba(0, 215, 136, 0.06),
+      transparent 55%
+    ),
     var(--blog-bg-dark);
 }
 
-/* -------------------------
-   Zone 1 (dark)
--------------------------- */
+/* =========================
+   Header (dark)
+========================= */
 
 .blogHeader {
-  max-width: var(--blog-max-width);
-  margin: 0 auto;
-  padding: 56px 18px 28px;
-  text-align: center;
-  color: var(--blog-dark-text);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-}
-
-.blogLogo {
-  height: 32px;
-  width: auto;
-  display: block;
-}
-
-
-.blogIndexTop {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 18px;
-}
-
-.blogIndexBack {
-  color: var(--blog-dark-muted);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  font-size: 13px;
-}
-
-.blogIndexBack:hover {
-  border-bottom-color: var(--blog-dark-border);
-  color: var(--blog-dark-text);
+  height: 140px;
+  display: grid;
+  place-items: center;
 }
 
 .blogBrandLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--blog-dark-text);
   text-decoration: none;
 }
 
-.blogBrandMark {
-  display: inline-flex;
-  opacity: 0.95;
-}
-
-.blogBrandText {
-  font-size: 18px;
-  letter-spacing: 0.02em;
-  font-weight: 650;
-}
-
-.blogMeta {
-  margin-top: 12px;
-  font-size: 13px;
-  color: var(--blog-dark-muted);
+.blogLogo {
+  height: 88px;
+  width: auto;
+  display: block;
 }
 
 .blogDivider {
@@ -90,9 +58,9 @@
   background: var(--blog-dark-border);
 }
 
-/* -------------------------
-   Zone 2 (light)
--------------------------- */
+/* =========================
+   Main (light)
+========================= */
 
 .blogMain {
   background: var(--blog-light-bg);
@@ -109,6 +77,10 @@
   line-height: 1.8;
 }
 
+/* =========================
+   Article header
+========================= */
+
 .blogMicrohook {
   font-style: italic;
   color: var(--blog-light-muted);
@@ -122,10 +94,34 @@
   margin: 0 0 18px;
 }
 
+.blogMetaInline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: baseline;
+  font-size: 13px;
+  color: var(--blog-light-muted);
+  margin: 8px 0 26px;
+  letter-spacing: 0.01em;
+}
+
+.blogMetaInline span[aria-hidden="true"] {
+  opacity: 0.45;
+}
+
+.blogAuthor {
+  font-weight: 600;
+  color: var(--blog-light-text);
+}
+
+/* =========================
+   Quote
+========================= */
+
 .blogQuote {
   margin: 0 0 30px;
   padding: 10px 0 10px 16px;
-  border-left: 3px solid var(--blog-light-border);
+  border-left: 4px solid var(--blog-light-border);
   color: var(--blog-light-muted);
 }
 
@@ -137,6 +133,10 @@
   font-size: 13px;
   opacity: 0.95;
 }
+
+/* =========================
+   Content
+========================= */
 
 .blogContent p {
   margin: 16px 0;
@@ -177,7 +177,6 @@
   font-size: 20px;
 }
 
-/* small rule before each section header */
 .blogContent h2::before,
 .blogContent h3::before {
   content: "";
@@ -191,9 +190,9 @@
   color: var(--blog-light-muted);
 }
 
-/* -------------------------
-   Blog index “library”
--------------------------- */
+/* =========================
+   Blog index
+========================= */
 
 .blogLibrary {
   max-width: var(--blog-article-width);
@@ -260,9 +259,13 @@
   opacity: 0.85;
 }
 
+/* =========================
+   Responsive
+========================= */
+
 @media (max-width: 520px) {
   .blogHeader {
-    padding-top: 42px;
+    height: 120px;
   }
 
   .blogArticle {

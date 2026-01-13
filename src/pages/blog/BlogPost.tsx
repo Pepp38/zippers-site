@@ -24,20 +24,11 @@ export function BlogPost() {
     return (
       <div className="blogShell">
         <header className="blogHeader">
-          <Link
-            className="blogBrandLink"
-            to="/blog"
-            aria-label="Zippers Blog"
-          >
-            <img
-              src={blogLogoSrc}
-              alt="Zippers Blog"
-              className="blogLogo"
-            />
+          <Link className="blogBrandLink" to="/blog" aria-label="Zippers Blog">
+            <img src={blogLogoSrc} alt="Zippers Blog" className="blogLogo" />
           </Link>
-
-          <div className="blogMeta">Not found</div>
         </header>
+
 
         <div className="blogDivider" />
 
@@ -65,16 +56,15 @@ export function BlogPost() {
           to="/blog"
           aria-label="Zippers Blog"
         >
-          <img
-            src={blogLogoSrc}
-            alt="Zippers Blog"
-            className="blogLogo"
-          />
+          <span className="blogLogoBadge">
+            <img
+              src={blogLogoSrc}
+              alt="Zippers Blog"
+              className="blogLogo"
+            />
+          </span>
         </Link>
 
-        <div className="blogMeta">
-          {post.author.name} · {dateLong} · {post.readingTimeText}
-        </div>
       </header>
 
       <div className="blogDivider" />
@@ -84,6 +74,14 @@ export function BlogPost() {
           <div className="blogMicrohook">{post.microhook}</div>
 
           <h1 className="blogH1">{post.title}</h1>
+
+          <div className="blogMetaInline">
+            <span className="blogAuthor">{post.author.name}</span>
+            <span aria-hidden="true">·</span>
+            <span>{dateLong}</span>
+            <span aria-hidden="true">·</span>
+            <span>{post.readingTimeText}</span>
+          </div>
 
           <blockquote className="blogQuote">
             <p className="blogQuoteText">{post.quoteText}</p>

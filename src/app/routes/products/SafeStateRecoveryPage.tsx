@@ -73,12 +73,18 @@ export function SafeStateRecoveryPage() {
 
 
       <div className="mt-10 flex flex-col gap-4">
-        <Link
-          to="/buy/savior-safestate-recovery"
-          className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15"
-        >
-          Buy SafeState Recovery
-        </Link>
+        <div className="inline-flex flex-col gap-1">
+          <button
+            type="button"
+            disabled
+            className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white opacity-60 cursor-not-allowed"
+          >
+            Finishing delivery flow
+          </button>
+          <p className="text-xs text-slate-200/70">
+            Checkout temporarily paused while we harden delivery confirmation.
+          </p>
+        </div>
 
         <Link
           to="/savior"

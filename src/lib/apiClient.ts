@@ -15,6 +15,39 @@ function getApiBaseUrl(): string {
   return apiBaseUrl.replace(/\/+$/, '');
 }
 
+export type DeliveryStatus = 'PENDING' | 'DELIVERED' | 'FAILED' | 'UNKNOWN';
+
+export type DeliveryStatusResponse = {
+  status: DeliveryStatus;
+  sku?: string;
+  githubUsername?: string;
+  repoUrl?: string;
+  updatedAt?: string;
+  reasonCode?: string;
+  message?: string;
+};
+
+export async function getDeliveryStatus(sessionId: string): Promise<DeliveryStatusResponse> {
+  const apiBaseUrl = getApiBaseUrl();
+
+  const res = await fetch(
+    `${apiBaseUrl}/api/delivery/status?session_id=${encodeURIComponent(sessionId)}`,
+    { method: 'GET' }
+  );
+
+  if (!res.ok) {
+    return { status: 'UNKNOWN', message: 'Unable to fetch delivery status.' };
+  }
+
+  const data = (await res.json()) as unknown;
+  if (!data || typeof data !== 'object' || !('status' in data)) {
+    return { status: 'UNKNOWN', message: 'Invalid status response.' };
+  }
+
+  return data as DeliveryStatusResponse;
+}
+
+
 export async function createCheckoutSession(
   input: CreateCheckoutSessionInput
 ): Promise<CreateCheckoutSessionResponse> {

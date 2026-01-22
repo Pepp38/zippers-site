@@ -1,12 +1,15 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { createCheckoutSession } from "../../../lib/apiClient";
-import { buyCatalog, isBuySku } from "./buyCatalog";
 import { useSupport } from "../../../components/support/useSupport";
+import { buyCatalog, isBuySku } from "./buyCatalog";
 
 const GITHUB_USERNAME_RE = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
 
 type BuyStep = "edit" | "confirm";
+
+const buildGithubProfileUrl = (username: string) =>
+  `https://github.com/${encodeURIComponent(username)}`;
 
 export function BuyPage() {
   const { sku: skuParam } = useParams<{ sku: string }>();
@@ -16,10 +19,7 @@ export function BuyPage() {
     return isBuySku(raw) ? raw : null;
   }, [skuParam]);
 
-  const item = useMemo(() => {
-    if (!sku) return null;
-    return buyCatalog[sku] ?? null;
-  }, [sku]);
+  const item = useMemo(() => (sku ? buyCatalog[sku] ?? null : null), [sku]);
 
   const [step, setStep] = useState<BuyStep>("edit");
 
@@ -30,12 +30,20 @@ export function BuyPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const githubUsernameNormalized = useMemo(() => githubUsername.trim().toLowerCase(), [githubUsername]);
-  const confirmRetypeNormalized = useMemo(() => confirmRetype.trim().toLowerCase(), [confirmRetype]);
+  const githubUsernameNormalized = useMemo(
+    () => githubUsername.trim().toLowerCase(),
+    [githubUsername],
+  );
 
-  const isGithubValid = useMemo(() => {
-    return GITHUB_USERNAME_RE.test(githubUsernameNormalized);
-  }, [githubUsernameNormalized]);
+  const confirmRetypeNormalized = useMemo(
+    () => confirmRetype.trim().toLowerCase(),
+    [confirmRetype],
+  );
+
+  const isGithubValid = useMemo(
+    () => GITHUB_USERNAME_RE.test(githubUsernameNormalized),
+    [githubUsernameNormalized],
+  );
 
   const doesRetypeMatch = useMemo(() => {
     if (!githubUsernameNormalized) return false;
@@ -43,8 +51,16 @@ export function BuyPage() {
     return githubUsernameNormalized === confirmRetypeNormalized;
   }, [githubUsernameNormalized, confirmRetypeNormalized]);
 
-  const canGoToConfirm = !!sku && isGithubValid && !isSubmitting;
-  const canProceedToStripe = !!sku && isGithubValid && confirmCheckbox && doesRetypeMatch && !isSubmitting;
+  const canGoToConfirm = Boolean(sku && isGithubValid && !isSubmitting);
+  const canProceedToStripe = Boolean(
+    sku && isGithubValid && confirmCheckbox && doesRetypeMatch && !isSubmitting,
+  );
+
+  const githubProfileUrl = useMemo(() => {
+    if (!githubUsernameNormalized) return null;
+    if (!isGithubValid) return null;
+    return buildGithubProfileUrl(githubUsernameNormalized);
+  }, [githubUsernameNormalized, isGithubValid]);
 
   const { openSupport } = useSupport();
 
@@ -54,12 +70,19 @@ export function BuyPage() {
     openSupport({
       subject: `Checkout support — ${item.title}`,
       pagePath: typeof window !== "undefined" ? window.location.pathname : "",
-      message: `SKU: ${sku ?? "(unknown)"}\nGitHub: ${githubUsernameNormalized || "(not provided yet)"}\n\nDescribe what happened:\n`,
+      message: [
+        `SKU: ${sku ?? "(unknown)"}`,
+        `GitHub: ${githubUsernameNormalized || "(not provided yet)"}`,
+        "",
+        "Describe what happened:",
+        "",
+      ].join("\n"),
     });
   };
 
   function onGoToConfirm() {
     if (!canGoToConfirm) return;
+
     setErrorMessage(null);
     setConfirmCheckbox(false);
     setConfirmRetype("");
@@ -68,6 +91,7 @@ export function BuyPage() {
 
   function onEditUsername() {
     if (isSubmitting) return;
+
     setErrorMessage(null);
     setStep("edit");
   }
@@ -94,6 +118,7 @@ export function BuyPage() {
         err instanceof Error && err.message && err.message !== "checkout_create_failed"
           ? err.message
           : "Checkout could not be started. Please try again.";
+
       setErrorMessage(message);
       setIsSubmitting(false);
     }
@@ -121,7 +146,9 @@ export function BuyPage() {
       <section className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
         <div className="space-y-6">
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">What you get</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">
+              What you get
+            </h2>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-200/90">
               <li>Private repo access</li>
               <li>Documentation and examples</li>
@@ -130,9 +157,14 @@ export function BuyPage() {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">Delivery</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">
+              Delivery
+            </h2>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-200/90">
-              <li>You’ll receive a GitHub invite to a private repository within minutes after payment.</li>
+              <li>
+                You’ll receive a GitHub invite to a private repository within minutes after payment.
+              </li>
+              <li>If the username is wrong, delivery cannot be completed automatically.</li>
               <li>
                 Support:{" "}
                 <button
@@ -172,9 +204,9 @@ export function BuyPage() {
                   : "Invalid username format."}
             </p>
 
-            {githubUsernameNormalized && isGithubValid ? (
+            {githubProfileUrl ? (
               <a
-                href={`https://github.com/${encodeURIComponent(githubUsernameNormalized)}`}
+                href={githubProfileUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
@@ -185,13 +217,17 @@ export function BuyPage() {
           </div>
 
           <p className="mt-2 text-xs text-slate-200/70">
-            How to find my username? It’s the part after github.com/ in your profile URL. Example: github.com/octocat → octocat.
+            How to find my username? It’s the part after github.com/ in your profile URL. Example:
+            github.com/octocat → octocat.
           </p>
 
           <div className="mt-4 rounded-xl border border-white/10 bg-white/5 p-4">
             <h3 className="text-sm font-semibold text-slate-200/90">Delivery</h3>
             <p className="mt-1 text-sm text-slate-200/90">
               You’ll receive a GitHub invite to a private repository within minutes after payment.
+            </p>
+            <p className="mt-1 text-sm text-slate-200/90">
+              If the username is wrong, delivery cannot be completed automatically.
             </p>
             <p className="mt-1 text-sm text-slate-200/90">
               Support:{" "}
@@ -228,14 +264,17 @@ export function BuyPage() {
         <section className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
           <h2 className="text-xl font-semibold text-white">Confirm your GitHub username</h2>
           <p className="mt-2 text-slate-200/90">
-            We will send the private repository invite to this account. If it’s wrong, you won’t receive the product.
+            We will send the private repository invite to this account. If it’s wrong, you won’t
+            receive the product.
           </p>
 
           <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-200/70">Deliver to</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-200/70">
+              Deliver to
+            </p>
             <p className="mt-2 font-mono text-2xl text-white">@{githubUsernameNormalized}</p>
             <a
-              href={`https://github.com/${encodeURIComponent(githubUsernameNormalized)}`}
+              href={buildGithubProfileUrl(githubUsernameNormalized)}
               target="_blank"
               rel="noreferrer"
               className="mt-3 inline-block text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
@@ -268,7 +307,9 @@ export function BuyPage() {
             />
 
             {confirmRetype.length > 0 && !doesRetypeMatch ? (
-              <p className="mt-2 text-sm text-slate-100">Doesn’t match. Please type the same username.</p>
+              <p className="mt-2 text-sm text-slate-100">
+                Doesn’t match. Please type the same username.
+              </p>
             ) : null}
           </div>
 

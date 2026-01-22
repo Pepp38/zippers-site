@@ -1,0 +1,28 @@
+/* Global theme for all pages inside SaviorShell */
+body.savior-shell {
+  --primary: #00d788;
+  --accent: #2ef656;
+  --support: #00b4a0;
+
+  --bg: #0f172a;
+  --panel: #111827;
+  --panel-2: rgba(255, 255, 255, 0.03);
+
+  --text: #f9fafb;
+  --muted: #cbd5e1;
+  --muted-2: #94a3b8;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --border-soft: rgba(255, 255, 255, 0.07);
+
+  --danger: #fb7185;
+
+  margin: 0;
+  background:
+    radial-gradient(900px 400px at 20% -10%, rgba(0, 215, 136, 0.14), transparent),
+    radial-gradient(700px 400px at 80% 0%, rgba(0, 180, 160, 0.12), transparent),
+    var(--bg);
+
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--text);
+}

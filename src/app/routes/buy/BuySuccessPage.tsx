@@ -1,45 +1,52 @@
-import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { getDeliveryStatus, type DeliveryStatusResponse } from '../../../lib/apiClient';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useParams, useSearchParams } from "react-router-dom";
+import { getDeliveryStatus, type DeliveryStatusResponse } from "../../../lib/apiClient";
 
 type UiState = {
-  status: DeliveryStatusResponse['status'];
+  status: DeliveryStatusResponse["status"];
   repoUrl?: string;
   reasonCode?: string;
   message?: string;
   updatedAt?: string;
 };
 
-function formatStatusLabel(status: UiState['status']): string {
+const SUPPORT_EMAIL = "support@zippers.dev";
+const INVITATIONS_URL = "https://github.com/settings/repositories";
+
+function formatStatusLabel(status: UiState["status"]): string {
   switch (status) {
-    case 'PENDING':
-      return 'Delivering…';
-    case 'DELIVERED':
-      return 'Delivered';
-    case 'FAILED':
-      return 'Delivery failed';
-    case 'UNKNOWN':
+    case "PENDING":
+      return "Delivering…";
+    case "DELIVERED":
+      return "Invitation sent";
+    case "FAILED":
+      return "Delivery failed";
+    case "UNKNOWN":
     default:
-      return 'Checking…';
+      return "Checking…";
   }
 }
 
 function formatStatusHint(state: UiState): string {
-  if (state.status === 'DELIVERED') {
-    if (state.reasonCode === 'DRY_RUN_INVITES_DISABLED') return 'Dry-run mode: no invitation was sent.';
-    if (state.reasonCode === 'OWNER_ALREADY_HAS_ACCESS') return 'Owner account already has access.';
-    return 'Invitation sent. Accept it on GitHub to access the private repository.';
+  if (state.status === "DELIVERED") {
+    if (state.reasonCode === "DRY_RUN_INVITES_DISABLED") {
+      return "Dry-run mode: no invitation was sent.";
+    }
+    if (state.reasonCode === "OWNER_ALREADY_HAS_ACCESS") {
+      return "Owner account already has access.";
+    }
+    return "Invitation sent. Accept it on GitHub to access the private repository.";
   }
 
-  if (state.status === 'FAILED') {
-    return state.message ?? 'We could not deliver your GitHub invitation.';
+  if (state.status === "FAILED") {
+    return state.message ?? "We could not deliver your GitHub invitation.";
   }
 
-  if (state.status === 'PENDING') {
-    return 'We are delivering your GitHub invitation. This usually takes under a minute.';
+  if (state.status === "PENDING") {
+    return "We are delivering your GitHub invitation. This usually takes under a minute.";
   }
 
-  return state.message ?? 'We are verifying delivery status.';
+  return state.message ?? "We are verifying delivery status.";
 }
 
 function buildSupportMailto(params: {
@@ -49,41 +56,47 @@ function buildSupportMailto(params: {
 }): string {
   const { sku, sessionId, githubUsername } = params;
 
-  const subjectParts: string[] = ['Zippers delivery support'];
+  const subjectParts: string[] = ["Zippers delivery support"];
   if (sku) subjectParts.push(`sku=${sku}`);
   if (sessionId) subjectParts.push(`session=${sessionId}`);
 
-  const subject = encodeURIComponent(subjectParts.join(' · '));
+  const subject = encodeURIComponent(subjectParts.join(" · "));
 
   const bodyLines: string[] = [
-    'Hello Zippers Support,',
-    '',
-    'I completed a purchase and need help confirming delivery.',
-    '',
-    sku ? `Product: ${sku}` : '',
-    sessionId ? `Session: ${sessionId}` : '',
-    githubUsername ? `GitHub: @${githubUsername}` : '',
-    '',
-    'Thanks!',
+    "Hello Zippers Support,",
+    "",
+    "I completed a purchase and need help confirming delivery.",
+    "",
+    sku ? `Product: ${sku}` : "",
+    sessionId ? `Session: ${sessionId}` : "",
+    githubUsername ? `GitHub: @${githubUsername}` : "",
+    "",
+    "Thanks!",
   ].filter(Boolean);
 
-  const body = encodeURIComponent(bodyLines.join('\n'));
-  return `mailto:support@zippers.dev?subject=${subject}&body=${body}`;
+  const body = encodeURIComponent(bodyLines.join("\n"));
+  return `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+function getLastGithubUsername(sku: string | null): string | null {
+  if (!sku) return null;
+  try {
+    return sessionStorage.getItem(`buy:lastGithubUsername:${sku}`);
+  } catch {
+    return null;
+  }
 }
 
 export function BuySuccessPage() {
   const { sku } = useParams<{ sku: string }>();
   const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get('session_id');
+  const sessionId = searchParams.get("session_id");
 
-  const githubUsername = useMemo(() => {
-    if (!sku) return null;
-    return sessionStorage.getItem(`buy:lastGithubUsername:${sku}`);
-  }, [sku]);
+  const githubUsername = useMemo(() => getLastGithubUsername(sku ?? null), [sku]);
 
   const [ui, setUi] = useState<UiState>(() => ({
-    status: sessionId ? 'PENDING' : 'UNKNOWN',
-    message: sessionId ? 'Verifying delivery…' : 'Missing session reference.',
+    status: sessionId ? "PENDING" : "UNKNOWN",
+    message: sessionId ? "Verifying delivery…" : "Missing session reference.",
   }));
 
   const stopPollingRef = useRef(false);
@@ -92,7 +105,7 @@ export function BuySuccessPage() {
 
   const supportMailto = useMemo(
     () => buildSupportMailto({ sku, sessionId, githubUsername }),
-    [sku, sessionId, githubUsername]
+    [sku, sessionId, githubUsername],
   );
 
   useEffect(() => {
@@ -113,14 +126,14 @@ export function BuySuccessPage() {
           updatedAt: status.updatedAt,
         });
 
-        if (status.status === 'DELIVERED' || status.status === 'FAILED') {
+        if (status.status === "DELIVERED" || status.status === "FAILED") {
           stopPollingRef.current = true;
         }
       } catch {
         setUi((prev) => ({
           ...prev,
-          status: 'UNKNOWN',
-          message: 'Network error while checking delivery status.',
+          status: "UNKNOWN",
+          message: "Network error while checking delivery status.",
         }));
       }
     };
@@ -131,8 +144,8 @@ export function BuySuccessPage() {
       pollAttemptRef.current += 1;
       const attempt = pollAttemptRef.current;
 
-      // 1-10 attempts -> every 2s (~20s)
-      // 11-22 attempts -> every 5s (~60s)
+      // 1–10 attempts -> every 2s (~20s)
+      // 11–22 attempts -> every 5s (~60s)
       const delayMs = attempt <= 10 ? 2000 : 5000;
 
       if (attempt > 22) {
@@ -140,10 +153,10 @@ export function BuySuccessPage() {
 
         setUi((prev) => ({
           ...prev,
-          status: prev.status === 'PENDING' ? 'UNKNOWN' : prev.status,
+          status: prev.status === "PENDING" ? "UNKNOWN" : prev.status,
           message:
-            prev.status === 'PENDING'
-              ? 'Delivery is taking longer than expected. Please check GitHub and contact support if needed.'
+            prev.status === "PENDING"
+              ? "Delivery is taking longer than expected. Please check GitHub and contact support if needed."
               : prev.message,
         }));
 
@@ -156,7 +169,6 @@ export function BuySuccessPage() {
       }, delayMs);
     };
 
-    // Kick off immediately
     pollOnce().then(scheduleNext);
 
     return () => {
@@ -172,7 +184,9 @@ export function BuySuccessPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
-      <h1 className="text-3xl font-semibold tracking-tight text-white">Payment successful</h1>
+      <h1 className="text-3xl font-semibold tracking-tight text-white">
+        Payment successful
+      </h1>
       <p className="mt-2 text-slate-200/90">
         <span className="font-medium text-slate-100">Next step:</span> accept your GitHub invite
       </p>
@@ -193,7 +207,7 @@ export function BuySuccessPage() {
 
           <div className="flex flex-col items-end gap-2">
             <a
-              href="https://github.com/settings/repositories"
+              href={INVITATIONS_URL}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15"
@@ -201,7 +215,7 @@ export function BuySuccessPage() {
               Open GitHub invitations
             </a>
 
-            {ui.status === 'DELIVERED' && ui.repoUrl ? (
+            {ui.status === "DELIVERED" && ui.repoUrl ? (
               <a
                 href={ui.repoUrl}
                 target="_blank"
@@ -226,7 +240,7 @@ export function BuySuccessPage() {
         <p className="text-slate-200/90">
           {githubUsername ? (
             <>
-              We sent the repository invitation to{' '}
+              We sent the repository invitation to{" "}
               <span className="font-mono text-slate-100">@{githubUsername}</span>.
             </>
           ) : (
@@ -242,10 +256,13 @@ export function BuySuccessPage() {
             <li>Check GitHub notifications</li>
             <li>Check the email linked to your GitHub account</li>
             <li>
-              If you don’t see it after <span className="font-medium text-slate-100">5 minutes</span>
-              :{' '}
-              <a className="underline underline-offset-4 hover:text-slate-100" href={supportMailto}>
-                support@zippers.dev
+              If you don’t see it after{" "}
+              <span className="font-medium text-slate-100">5 minutes</span>:{" "}
+              <a
+                className="underline underline-offset-4 hover:text-slate-100"
+                href={supportMailto}
+              >
+                {SUPPORT_EMAIL}
               </a>
             </li>
           </ol>
@@ -254,7 +271,7 @@ export function BuySuccessPage() {
         {sessionId || sku ? (
           <p className="mt-4 text-sm text-slate-200/70">
             {sessionId ? <>Reference: {sessionId}</> : null}
-            {sessionId && sku ? ' · ' : null}
+            {sessionId && sku ? " · " : null}
             {sku ? <>Product: {sku}</> : null}
           </p>
         ) : null}

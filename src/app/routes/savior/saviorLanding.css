@@ -1,16 +1,27 @@
+/* ==========================================================================
+   Savior Landing (scoped)
+   Notes:
+   - Scoped to body.savior-landing to avoid bleeding into the rest of the site.
+   - Keep theme variables and global-ish resets inside this scope.
+   ========================================================================== */
+
 /* Scoped theme for Savior landing only */
 body.savior-landing {
   --primary: #00d788;
   --accent: #2ef656;
   --support: #00b4a0;
+
   --bg: #0f172a;
   --panel: #111827;
   --panel-2: rgba(255, 255, 255, 0.03);
+
   --text: #f9fafb;
   --muted: #cbd5e1;
   --muted-2: #94a3b8;
+
   --border: rgba(255, 255, 255, 0.1);
   --border-soft: rgba(255, 255, 255, 0.07);
+
   --danger: #fb7185;
 
   margin: 0;
@@ -18,7 +29,8 @@ body.savior-landing {
     radial-gradient(900px 400px at 20% -10%, rgba(0, 215, 136, 0.14), transparent),
     radial-gradient(700px 400px at 80% 0%, rgba(0, 180, 160, 0.12), transparent),
     var(--bg);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color: var(--text);
 }
 
@@ -29,21 +41,32 @@ body.savior-landing *::after {
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
 body.savior-landing .wrap {
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 2rem;
 }
 
+/* ==========================================================================
+   Header / Nav
+   ========================================================================== */
+
 body.savior-landing header.landing-nav {
-  padding: 4rem 0 0; 
+  padding: 4rem 0 0;
   position: relative;
+
+  border-bottom: 1px solid transparent;
+
   transition:
     background 0.25s ease,
     box-shadow 0.25s ease,
     border-color 0.25s ease;
-    border-bottom: 1px solid transparent;
 }
+
 /* Header sticky */
 body.savior-landing header.landing-nav.is-sticky {
   position: sticky;
@@ -56,13 +79,6 @@ body.savior-landing header.landing-nav.is-sticky {
   border-bottom: 1px solid var(--border-soft);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
 }
-
-body.savior-landing .savior-hero {
-  padding: 0rem 0 4rem;
-  border-bottom: 1px solid var(--border-soft);
-}
-
-
 
 body.savior-landing .top {
   display: flex;
@@ -90,7 +106,6 @@ body.savior-landing .logo-sub {
   color: var(--muted-2);
 }
 
-
 body.savior-landing header.landing-nav nav a {
   margin-left: 2rem;
   font-size: 0.9rem;
@@ -102,6 +117,14 @@ body.savior-landing header.landing-nav nav a:hover {
   color: var(--text);
 }
 
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+body.savior-landing .savior-hero {
+  padding: 0 0 4rem;
+  border-bottom: 1px solid var(--border-soft);
+}
 
 body.savior-landing .hero {
   max-width: 780px;
@@ -110,7 +133,7 @@ body.savior-landing .hero {
 body.savior-landing h1 {
   font-size: 2.8rem;
   line-height: 1.15;
-  margin: 0 0 1.2rem 0;
+  margin: 0 0 1.2rem;
   font-weight: 650;
   letter-spacing: -0.02em;
 }
@@ -124,7 +147,7 @@ body.savior-landing .lead {
   font-size: 1.05rem;
   line-height: 1.7;
   color: var(--muted);
-  margin: 0 0 2.5rem 0;
+  margin: 0 0 2.5rem;
 }
 
 body.savior-landing .actions {
@@ -173,6 +196,10 @@ body.savior-landing .trust span::before {
   margin-right: 0.4rem;
 }
 
+/* ==========================================================================
+   Sections
+   ========================================================================== */
+
 body.savior-landing section {
   padding: 4rem 0;
   border-bottom: 1px solid var(--border-soft);
@@ -185,12 +212,12 @@ body.savior-landing .kicker {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-size: 0.75rem;
-  margin: 0 0 0.8rem 0;
+  margin: 0 0 0.8rem;
 }
 
 body.savior-landing .section-title {
   font-size: 2rem;
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem;
   letter-spacing: -0.02em;
 }
 
@@ -198,7 +225,7 @@ body.savior-landing .section-sub {
   color: var(--muted);
   max-width: 760px;
   line-height: 1.7;
-  margin: 0 0 2rem 0;
+  margin: 0 0 2rem;
 }
 
 body.savior-landing .grid {
@@ -212,18 +239,26 @@ body.savior-landing .grid {
   body.savior-landing .grid {
     grid-template-columns: 1fr;
   }
+
   body.savior-landing header.landing-nav nav {
     display: none;
   }
 }
 
-
 body.savior-landing .card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.02)
+  );
   border: 1px solid var(--border-soft);
   border-radius: 16px;
   padding: 1.2rem;
 }
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
 
 body.savior-landing label {
   display: block;
@@ -254,6 +289,10 @@ body.savior-landing textarea:focus {
   border-color: rgba(0, 215, 136, 0.45);
   box-shadow: 0 0 0 6px rgba(0, 215, 136, 0.1);
 }
+
+/* ==========================================================================
+   Buttons / UI
+   ========================================================================== */
 
 body.savior-landing .row {
   display: flex;
@@ -319,6 +358,10 @@ body.savior-landing .pill.no::before {
   font-weight: 900;
 }
 
+/* ==========================================================================
+   Code blocks
+   ========================================================================== */
+
 body.savior-landing .list {
   display: grid;
   gap: 0.65rem;
@@ -330,7 +373,10 @@ body.savior-landing .code {
   border-radius: 16px;
   padding: 1rem;
   overflow: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
   font-size: 0.9rem;
   color: #d1fae5;
 }
@@ -338,6 +384,10 @@ body.savior-landing .code {
 body.savior-landing .code .dim {
   color: rgba(209, 250, 229, 0.7);
 }
+
+/* ==========================================================================
+   Footer + Accessibility
+   ========================================================================== */
 
 body.savior-landing footer {
   padding: 3rem 0 4rem;
@@ -360,4 +410,3 @@ body.savior-landing .stack {
   display: grid;
   gap: 1rem;
 }
-

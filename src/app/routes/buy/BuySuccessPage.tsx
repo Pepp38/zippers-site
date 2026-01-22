@@ -26,12 +26,8 @@ function formatStatusLabel(status: UiState['status']): string {
 
 function formatStatusHint(state: UiState): string {
   if (state.status === 'DELIVERED') {
-    if (state.reasonCode === 'DRY_RUN_INVITES_DISABLED') {
-      return 'Dry-run mode: no invitation was sent.';
-    }
-    if (state.reasonCode === 'OWNER_ALREADY_HAS_ACCESS') {
-      return 'Owner account already has access.';
-    }
+    if (state.reasonCode === 'DRY_RUN_INVITES_DISABLED') return 'Dry-run mode: no invitation was sent.';
+    if (state.reasonCode === 'OWNER_ALREADY_HAS_ACCESS') return 'Owner account already has access.';
     return 'Invitation sent. Accept it on GitHub to access the private repository.';
   }
 
@@ -40,10 +36,39 @@ function formatStatusHint(state: UiState): string {
   }
 
   if (state.status === 'PENDING') {
-    return 'We are delivering your GitHub invitation. This usually takes a few seconds.';
+    return 'We are delivering your GitHub invitation. This usually takes under a minute.';
   }
 
   return state.message ?? 'We are verifying delivery status.';
+}
+
+function buildSupportMailto(params: {
+  sku?: string | null;
+  sessionId?: string | null;
+  githubUsername?: string | null;
+}): string {
+  const { sku, sessionId, githubUsername } = params;
+
+  const subjectParts: string[] = ['Zippers delivery support'];
+  if (sku) subjectParts.push(`sku=${sku}`);
+  if (sessionId) subjectParts.push(`session=${sessionId}`);
+
+  const subject = encodeURIComponent(subjectParts.join(' · '));
+
+  const bodyLines: string[] = [
+    'Hello Zippers Support,',
+    '',
+    'I completed a purchase and need help confirming delivery.',
+    '',
+    sku ? `Product: ${sku}` : '',
+    sessionId ? `Session: ${sessionId}` : '',
+    githubUsername ? `GitHub: @${githubUsername}` : '',
+    '',
+    'Thanks!',
+  ].filter(Boolean);
+
+  const body = encodeURIComponent(bodyLines.join('\n'));
+  return `mailto:support@zippers.dev?subject=${subject}&body=${body}`;
 }
 
 export function BuySuccessPage() {
@@ -57,34 +82,18 @@ export function BuySuccessPage() {
   }, [sku]);
 
   const [ui, setUi] = useState<UiState>(() => ({
-    status: sessionId ? 'UNKNOWN' : 'UNKNOWN',
-    message: sessionId ? 'Starting delivery verification…' : 'Missing session reference.',
+    status: sessionId ? 'PENDING' : 'UNKNOWN',
+    message: sessionId ? 'Verifying delivery…' : 'Missing session reference.',
   }));
 
   const stopPollingRef = useRef(false);
   const pollAttemptRef = useRef(0);
+  const timeoutIdRef = useRef<number | null>(null);
 
-  const supportMailto = useMemo(() => {
-    const subjectParts: string[] = ['Zippers delivery support'];
-    if (sku) subjectParts.push(`sku=${sku}`);
-    if (sessionId) subjectParts.push(`session=${sessionId}`);
-    const subject = encodeURIComponent(subjectParts.join(' · '));
-
-    const bodyLines: string[] = [
-      'Hello Zippers Support,',
-      '',
-      'I completed a purchase and need help confirming delivery.',
-      '',
-      sku ? `Product: ${sku}` : '',
-      sessionId ? `Session: ${sessionId}` : '',
-      githubUsername ? `GitHub: @${githubUsername}` : '',
-      '',
-      'Thanks!',
-    ].filter(Boolean);
-
-    const body = encodeURIComponent(bodyLines.join('\n'));
-    return `mailto:support@zippers.dev?subject=${subject}&body=${body}`;
-  }, [sku, sessionId, githubUsername]);
+  const supportMailto = useMemo(
+    () => buildSupportMailto({ sku, sessionId, githubUsername }),
+    [sku, sessionId, githubUsername]
+  );
 
   useEffect(() => {
     if (!sessionId) return;
@@ -104,7 +113,6 @@ export function BuySuccessPage() {
           updatedAt: status.updatedAt,
         });
 
-        // Stop conditions
         if (status.status === 'DELIVERED' || status.status === 'FAILED') {
           stopPollingRef.current = true;
         }
@@ -121,16 +129,15 @@ export function BuySuccessPage() {
       if (stopPollingRef.current) return;
 
       pollAttemptRef.current += 1;
-
-      // Backoff plan:
-      // 0-9 attempts -> every 2s (about 20s)
-      // 10-21 attempts -> every 5s (about 60s total)
-      // then stop
       const attempt = pollAttemptRef.current;
+
+      // 1-10 attempts -> every 2s (~20s)
+      // 11-22 attempts -> every 5s (~60s)
       const delayMs = attempt <= 10 ? 2000 : 5000;
 
       if (attempt > 22) {
         stopPollingRef.current = true;
+
         setUi((prev) => ({
           ...prev,
           status: prev.status === 'PENDING' ? 'UNKNOWN' : prev.status,
@@ -139,10 +146,11 @@ export function BuySuccessPage() {
               ? 'Delivery is taking longer than expected. Please check GitHub and contact support if needed.'
               : prev.message,
         }));
+
         return;
       }
 
-      window.setTimeout(async () => {
+      timeoutIdRef.current = window.setTimeout(async () => {
         await pollOnce();
         scheduleNext();
       }, delayMs);
@@ -153,6 +161,9 @@ export function BuySuccessPage() {
 
     return () => {
       stopPollingRef.current = true;
+      if (timeoutIdRef.current !== null) {
+        window.clearTimeout(timeoutIdRef.current);
+      }
     };
   }, [sessionId]);
 
@@ -166,7 +177,6 @@ export function BuySuccessPage() {
         <span className="font-medium text-slate-100">Next step:</span> accept your GitHub invite
       </p>
 
-      {/* Delivery status */}
       <section className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -212,7 +222,6 @@ export function BuySuccessPage() {
         </div>
       </section>
 
-      {/* Original info block */}
       <section className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5">
         <p className="text-slate-200/90">
           {githubUsername ? (
@@ -226,12 +235,15 @@ export function BuySuccessPage() {
         </p>
 
         <div className="mt-4">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">Checklist</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200/80">
+            Checklist
+          </h2>
           <ol className="mt-2 list-decimal space-y-1 pl-5 text-slate-200/90">
             <li>Check GitHub notifications</li>
             <li>Check the email linked to your GitHub account</li>
             <li>
-              If you don’t see it after <span className="font-medium text-slate-100">5 minutes</span>:{' '}
+              If you don’t see it after <span className="font-medium text-slate-100">5 minutes</span>
+              :{' '}
               <a className="underline underline-offset-4 hover:text-slate-100" href={supportMailto}>
                 support@zippers.dev
               </a>

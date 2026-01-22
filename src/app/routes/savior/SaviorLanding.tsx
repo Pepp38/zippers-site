@@ -1,24 +1,61 @@
 import { useEffect } from 'react';
-import { LandingFooter } from '../../../components/layout/LandingFooter';
-import { LandingHeader } from '../../../components/layout/LandingHeader';
-import './saviorLanding.css';
-import { saviorContent } from '../../../content/savior.ts';  
 import { Link } from 'react-router-dom';
 
-export function SaviorLanding() {
+import { LandingFooter } from '../../../components/layout/LandingFooter';
+import { LandingHeader } from '../../../components/layout/LandingHeader';
+import { saviorContent } from '../../../content/savior';
+import './saviorLanding.css';
 
+const DEMO_STORAGE_KEY = 'demo:savior:form:draft';
+
+type DraftPayload = {
+  message?: string;
+  email?: string;
+};
+
+function safeReadDraft(): DraftPayload {
+  try {
+    const raw = localStorage.getItem(DEMO_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== 'object') return {};
+    return parsed as DraftPayload;
+  } catch {
+    return {};
+  }
+}
+
+function safeWriteDraft(payload: DraftPayload): void {
+  try {
+    localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(payload));
+  } catch {
+    // Demo only: ignore storage write errors.
+  }
+}
+
+function safeClearDraft(): void {
+  try {
+    localStorage.removeItem(DEMO_STORAGE_KEY);
+  } catch {
+    // Demo only: ignore storage errors.
+  }
+}
+
+function isPasswordTarget(target: HTMLElement): boolean {
+  return target.getAttribute('type') === 'password';
+}
+
+export function SaviorLanding() {
   useEffect(() => {
-    // Scope landing theme to this route only
     document.body.classList.add('savior-landing');
 
-    // Demo-only implementation to illustrate the promise.
-    // This is not the actual Savior library.
-    const STORAGE_KEY = 'demo:savior:form:draft';
-
-    const formEl = document.getElementById('demoForm') as HTMLFormElement | null;
+    const formEl = document.getElementById('demoForm');
     const statusLineEl = document.getElementById('statusLine');
     const storagePreviewEl = document.getElementById('storagePreview');
 
+    if (!(formEl instanceof HTMLFormElement)) {
+      return () => document.body.classList.remove('savior-landing');
+    }
     if (!(statusLineEl instanceof HTMLParagraphElement)) {
       return () => document.body.classList.remove('savior-landing');
     }
@@ -26,75 +63,58 @@ export function SaviorLanding() {
       return () => document.body.classList.remove('savior-landing');
     }
 
-    const statusLine = statusLineEl;         // now non-null, correct type
-    const storagePreview = storagePreviewEl; // now non-null, correct type
+    const textEl = document.getElementById('demoText');
+    const emailEl = document.getElementById('demoEmail');
+    const passwordEl = document.getElementById('demoPassword');
 
-
-    // If DOM isn't ready (or markup changed), keep styling scoped but skip demo wiring
-    if (!formEl || !statusLineEl || !storagePreviewEl) {
-      return () => {
-        document.body.classList.remove('savior-landing');
-      };
+    if (!(textEl instanceof HTMLTextAreaElement)) {
+      return () => document.body.classList.remove('savior-landing');
+    }
+    if (!(emailEl instanceof HTMLInputElement)) {
+      return () => document.body.classList.remove('savior-landing');
+    }
+    if (!(passwordEl instanceof HTMLInputElement)) {
+      return () => document.body.classList.remove('savior-landing');
     }
 
-    function readDraft(): Record<string, string> {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return {};
-        const parsed = JSON.parse(raw);
-        if (!parsed || typeof parsed !== 'object') return {};
-        return parsed as Record<string, string>;
-      } catch {
-        return {};
-      }
-    }
+    const btnRestoreEl = document.getElementById('btnRestore');
+    const btnSimulateReloadEl = document.getElementById('btnSimulateReload');
+    const btnClearEl = document.getElementById('btnClear');
 
-    function writeDraft(draft: Record<string, string>) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-    }
+    const btnRestore = btnRestoreEl instanceof HTMLButtonElement ? btnRestoreEl : null;
+    const btnSimulateReload =
+      btnSimulateReloadEl instanceof HTMLButtonElement ? btnSimulateReloadEl : null;
+    const btnClear = btnClearEl instanceof HTMLButtonElement ? btnClearEl : null;
 
-    function setStatus(text: string) {
-    statusLine.innerHTML = `Status: <strong>${text}</strong>`;
-    }
+    let saveTimerId: number | null = null;
 
-    function refreshPreview() {
-      const draft = readDraft();
-      storagePreview.textContent = JSON.stringify(draft, null, 2);
-    }
+    const setStatus = (text: string) => {
+      statusLineEl.innerHTML = `Status: <strong>${text}</strong>`;
+    };
 
+    const refreshPreview = () => {
+      const draft = safeReadDraft();
+      storagePreviewEl.textContent = JSON.stringify(draft, null, 2);
+    };
 
-    function restoreDraftIntoForm() {
-      const draft = readDraft();
-
-      const textEl = document.getElementById('demoText') as HTMLTextAreaElement | null;
-      const emailEl = document.getElementById('demoEmail') as HTMLInputElement | null;
-      const passwordEl = document.getElementById('demoPassword') as HTMLInputElement | null;
-
-      if (!textEl || !emailEl || !passwordEl) return;
+    const restoreDraftIntoForm = () => {
+      const draft = safeReadDraft();
 
       textEl.value = draft.message ?? '';
       emailEl.value = draft.email ?? '';
 
-      // Password is intentionally not restored.
+      // Password is intentionally never stored or restored.
       passwordEl.value = '';
 
       setStatus('restored from storage');
       refreshPreview();
-    }
+    };
 
-    let saveTimerId: number | null = null;
-
-    function scheduleSave() {
+    const scheduleSave = () => {
       if (saveTimerId !== null) window.clearTimeout(saveTimerId);
 
       saveTimerId = window.setTimeout(() => {
-        const textEl = document.getElementById('demoText') as HTMLTextAreaElement | null;
-        const emailEl = document.getElementById('demoEmail') as HTMLInputElement | null;
-        const passwordEl = document.getElementById('demoPassword') as HTMLInputElement | null;
-
-        if (!textEl || !emailEl || !passwordEl) return;
-
-        writeDraft({
+        safeWriteDraft({
           message: textEl.value,
           email: emailEl.value,
         });
@@ -102,20 +122,19 @@ export function SaviorLanding() {
         setStatus('saved (password ignored)');
         refreshPreview();
       }, 350);
-    }
+    };
 
-    function clearDraft() {
-      localStorage.removeItem(STORAGE_KEY);
+    const clearDraft = () => {
+      safeClearDraft();
       setStatus('draft cleared');
       refreshPreview();
-    }
+    };
 
     const onInput = (e: Event) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
 
-      // Never save passwords.
-      if (target.getAttribute('type') === 'password') {
+      if (isPasswordTarget(target)) {
         setStatus('password input ignored');
         return;
       }
@@ -127,10 +146,6 @@ export function SaviorLanding() {
       setStatus('simulating reload');
       restoreDraftIntoForm();
     };
-
-    const btnRestore = document.getElementById('btnRestore') as HTMLButtonElement | null;
-    const btnSimulateReload = document.getElementById('btnSimulateReload') as HTMLButtonElement | null;
-    const btnClear = document.getElementById('btnClear') as HTMLButtonElement | null;
 
     // Init
     restoreDraftIntoForm();
@@ -154,33 +169,34 @@ export function SaviorLanding() {
     };
   }, []);
 
-    useEffect(() => {
-      const navHeader = document.querySelector('body.savior-landing header.landing-nav'); // header du LandingHeader (le premier)
-      const hero = document.getElementById('savior-hero');
+  useEffect(() => {
+    const navHeader = document.querySelector('body.savior-landing header.landing-nav');
+    const hero = document.getElementById('savior-hero');
 
-      if (!(navHeader instanceof HTMLElement)) return;
-      if (!(hero instanceof HTMLElement)) return;
+    if (!(navHeader instanceof HTMLElement)) return;
+    if (!(hero instanceof HTMLElement)) return;
 
-      const onScroll = () => {
-        const heroBottom = hero.getBoundingClientRect().bottom;
-        const shouldStick = heroBottom <= 0;
-        navHeader.classList.toggle('is-sticky', shouldStick);
-      };
+    const onScroll = () => {
+      const heroBottom = hero.getBoundingClientRect().bottom;
+      navHeader.classList.toggle('is-sticky', heroBottom <= 0);
+    };
 
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
-      return () => window.removeEventListener('scroll', onScroll);
-    }, []);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-    const githubUrl = saviorContent.hero.ctaSecondary.href;
+  const githubUrl = saviorContent.hero.ctaSecondary.href;
 
-    const docsUrl = saviorContent.links.items.find((i) => i.label === 'Documentation')?.href
-      ?? saviorContent.links.items.find((i) => i.label === 'GitHub repository')?.href
-      ?? githubUrl;
+  const docsUrl =
+    saviorContent.links.items.find((i) => i.label === 'Documentation')?.href ??
+    saviorContent.links.items.find((i) => i.label === 'GitHub repository')?.href ??
+    githubUrl;
 
-    const testsUrl = saviorContent.reliability.links.find((l) => l.label === 'Testing in the repo')?.href ?? `${githubUrl}#testing`;
-
+  const testsUrl =
+    saviorContent.reliability.links.find((l) => l.label === 'Testing in the repo')?.href ??
+    `${githubUrl}#testing`;
 
   return (
     <>
@@ -200,12 +216,14 @@ export function SaviorLanding() {
         <div className="wrap">
           <div className="hero">
             <h1>
-              Stop losing <span>user input</span>.
+              Stop losing <span>user input</span> to common failures.
             </h1>
 
             <p className="lead">
-              You already know the bug. A refresh, a crash, a tab closed too fast, and everything is gone. Savior silently saves form input and restores it
-              when things break. No backend. No dependencies. Drop it in and forget about it.
+              You already know the bug. A refresh, a crash, a tab closed too fast, and everything is
+              gone. Savior saves form input locally and restores it after common interruptions —
+              without a backend and without dependencies. Drop it in. Know what gets saved, and what
+              is intentionally ignored.
             </p>
 
             <div className="actions">
@@ -217,7 +235,6 @@ export function SaviorLanding() {
                 {saviorContent.hero.ctaSecondary.label}
               </a>
             </div>
-
 
             <div className="trust">
               <span>Dependency-free</span>
@@ -232,20 +249,32 @@ export function SaviorLanding() {
         <section id="try">
           <div className="wrap">
             <p className="kicker">Try it</p>
-            <h2 className="section-title">Lose input. Reload. Get it back.</h2>
-            <p className="section-sub">Type something, then refresh the page. Your text comes back. Password fields are ignored by design.</p>
+            <h2 className="section-title">Type. Reload. Restore your draft.</h2>
+            <p className="section-sub">
+              Type something, then refresh the page. Your draft is restored. Password fields are
+              ignored by design.
+            </p>
 
             <div className="grid">
               <div className="card">
                 <form id="demoForm" autoComplete="off">
                   <label htmlFor="demoText">Message</label>
-                  <textarea id="demoText" name="message" placeholder="Write a few lines, then hit Refresh..." />
+                  <textarea
+                    id="demoText"
+                    name="message"
+                    placeholder="Write a few lines, then hit Refresh..."
+                  />
 
                   <label htmlFor="demoEmail">Email</label>
                   <input id="demoEmail" name="email" type="email" placeholder="name@domain.com" />
 
                   <label htmlFor="demoPassword">Password (not saved)</label>
-                  <input id="demoPassword" name="password" type="password" placeholder="This field will not be stored" />
+                  <input
+                    id="demoPassword"
+                    name="password"
+                    type="password"
+                    placeholder="This field will not be stored"
+                  />
 
                   <div className="row">
                     <button className="btn primary" type="button" id="btnRestore">
@@ -273,13 +302,23 @@ export function SaviorLanding() {
                 </div>
 
                 <p className="hint" style={{ marginTop: '1.2rem' }}>
-                  This demo uses the same idea: debounced saves to browser storage, scoped per form, with password fields excluded. A senior dev can verify
-                  everything in DevTools.
+                  This demo is intentionally minimal: it illustrates the storage pattern (debounced
+                  writes, per-form scoping, safe exclusions). For production behavior and edge-case
+                  handling, see the repo and tests.
                 </p>
+
+                <div className="row">
+                  <a className="btn" href={testsUrl} target="_blank" rel="noreferrer">
+                    Open tests
+                  </a>
+                  <a className="btn" href={githubUrl} target="_blank" rel="noreferrer">
+                    Open repo
+                  </a>
+                </div>
 
                 <div className="code" aria-label="Storage preview">
                   <span className="dim">storage key</span>
-                  <div>demo:savior:form:draft</div>
+                  <div>{DEMO_STORAGE_KEY}</div>
                   <br />
                   <span className="dim">saved json</span>
                   <div id="storagePreview">{'{}'}</div>
@@ -305,7 +344,8 @@ export function SaviorLanding() {
                 </div>
 
                 <p className="hint" style={{ marginTop: '1.2rem' }}>
-                  These are the defaults people expect. You can still override behavior when you need it.
+                  Savior Core is intentionally best-effort. It optimizes for low-friction
+                  persistence, not guaranteed recovery under every failure mode.
                 </p>
               </div>
 
@@ -329,7 +369,10 @@ export function SaviorLanding() {
           <div className="wrap">
             <p className="kicker">Coverage</p>
             <h2 className="section-title">What gets saved. What is tested.</h2>
-            <p className="section-sub">Lightweight, honest scope. Enough to build trust without turning the landing into a test report.</p>
+            <p className="section-sub">
+              Lightweight, explicit scope. Enough to build trust without turning the landing into a
+              test report.
+            </p>
 
             <div className="grid">
               <div className="card">
@@ -348,16 +391,22 @@ export function SaviorLanding() {
                 </div>
 
                 <p className="hint" style={{ marginTop: '1.2rem' }}>
-                  If a field is sensitive, you should be able to exclude it. Password is excluded by default.
+                  If a field is sensitive, you should be able to exclude it. Password is excluded by
+                  default.
                 </p>
               </div>
 
               <div className="card">
                 <details open>
-                  <summary style={{ cursor: 'pointer', fontWeight: 650, color: 'var(--text)' }}>Tested behaviors (high level)</summary>
+                  <summary
+                    style={{ cursor: 'pointer', fontWeight: 650, color: 'var(--text)' }}
+                  >
+                    Tested behaviors (high level)
+                  </summary>
 
                   <div className="hint" style={{ marginTop: '0.8rem' }}>
-                    The point is not “100% coverage”. The point is: the failure modes you care about are explicitly tested.
+                    The point is not “100% coverage”. The point is: the failure modes you care about
+                    are explicitly tested.
                   </div>
 
                   <div className="list" style={{ marginTop: '1rem' }}>
@@ -371,7 +420,8 @@ export function SaviorLanding() {
                 </details>
 
                 <p className="hint" style={{ marginTop: '1.2rem' }}>
-                  Want the exact list of automated + manual scenarios. Link it in docs or GitHub under <strong>Tests</strong>.
+                  Want the exact list of automated and manual scenarios? See <strong>Tests</strong>{' '}
+                  in the repo.
                 </p>
 
                 <div className="row">
@@ -379,7 +429,6 @@ export function SaviorLanding() {
                     Open tests
                   </a>
                 </div>
-
               </div>
             </div>
           </div>
@@ -389,7 +438,9 @@ export function SaviorLanding() {
           <div className="wrap">
             <p className="kicker">Install</p>
             <h2 className="section-title">Drop it in.</h2>
-            <p className="section-sub">Install the package, then attach Savior to a form. That is it.</p>
+            <p className="section-sub">
+              Install the package, attach Savior to a form, and you’re done.
+            </p>
 
             <div className="grid">
               <div className="card">
@@ -427,8 +478,12 @@ export function SaviorLanding() {
                   <div className="pill ok">Safe exclusions</div>
                 </div>
 
+                <p className="hint" style={{ marginTop: '1rem' }}>
+                  Open-source (MIT). Free to use.
+                </p>
+
                 <p className="hint" style={{ marginTop: '1.2rem' }}>
-                  Want edge cases, multi-form, drivers, or customization. Head to docs.
+                  Want edge cases, multi-form, drivers, or customization? Head to docs.
                 </p>
 
                 <div className="row">
@@ -444,13 +499,13 @@ export function SaviorLanding() {
           </div>
         </section>
 
-
         <section id="safestate">
           <div className="wrap">
             <p className="kicker">SafeState Recovery</p>
             <h2 className="section-title">Controlled recovery for failure scenarios.</h2>
             <p className="section-sub">
-              SafeState Recovery adds a controlled, deterministic restore layer for edge cases, incidents, and corrupted drafts.
+              SafeState Recovery adds a stricter, deterministic recovery layer for incidents, edge
+              cases, and corrupted storage.
             </p>
 
             <div className="row">
@@ -461,7 +516,7 @@ export function SaviorLanding() {
           </div>
         </section>
 
-        <LandingFooter text="© Savior. Local-first draft recovery for forms." />
+        <LandingFooter text="© Savior Core. Local-first autosave for HTML forms." />
       </main>
     </>
   );

@@ -1,17 +1,18 @@
-import { useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { createCheckoutSession } from '../../../lib/apiClient';
-import { buyCatalog, isBuySku } from './buyCatalog';
+import { useMemo, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { createCheckoutSession } from "../../../lib/apiClient";
+import { buyCatalog, isBuySku } from "./buyCatalog";
+import { useSupport } from "../../../components/support/useSupport";
 
 const GITHUB_USERNAME_RE = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i;
 
-type BuyStep = 'edit' | 'confirm';
+type BuyStep = "edit" | "confirm";
 
 export function BuyPage() {
   const { sku: skuParam } = useParams<{ sku: string }>();
 
   const sku = useMemo(() => {
-    const raw = (skuParam ?? '').trim();
+    const raw = (skuParam ?? "").trim();
     return isBuySku(raw) ? raw : null;
   }, [skuParam]);
 
@@ -20,11 +21,11 @@ export function BuyPage() {
     return buyCatalog[sku] ?? null;
   }, [sku]);
 
-  const [step, setStep] = useState<BuyStep>('edit');
+  const [step, setStep] = useState<BuyStep>("edit");
 
-  const [githubUsername, setGithubUsername] = useState('');
+  const [githubUsername, setGithubUsername] = useState("");
   const [confirmCheckbox, setConfirmCheckbox] = useState(false);
-  const [confirmRetype, setConfirmRetype] = useState('');
+  const [confirmRetype, setConfirmRetype] = useState("");
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,18 +46,30 @@ export function BuyPage() {
   const canGoToConfirm = !!sku && isGithubValid && !isSubmitting;
   const canProceedToStripe = !!sku && isGithubValid && confirmCheckbox && doesRetypeMatch && !isSubmitting;
 
+  const { openSupport } = useSupport();
+
+  const openCheckoutSupport = () => {
+    if (!item) return;
+
+    openSupport({
+      subject: `Checkout support — ${item.title}`,
+      pagePath: typeof window !== "undefined" ? window.location.pathname : "",
+      message: `SKU: ${sku ?? "(unknown)"}\nGitHub: ${githubUsernameNormalized || "(not provided yet)"}\n\nDescribe what happened:\n`,
+    });
+  };
+
   function onGoToConfirm() {
     if (!canGoToConfirm) return;
     setErrorMessage(null);
     setConfirmCheckbox(false);
-    setConfirmRetype('');
-    setStep('confirm');
+    setConfirmRetype("");
+    setStep("confirm");
   }
 
   function onEditUsername() {
     if (isSubmitting) return;
     setErrorMessage(null);
-    setStep('edit');
+    setStep("edit");
   }
 
   async function onProceedToStripe() {
@@ -78,9 +91,9 @@ export function BuyPage() {
       window.location.href = url;
     } catch (err) {
       const message =
-        err instanceof Error && err.message && err.message !== 'checkout_create_failed'
+        err instanceof Error && err.message && err.message !== "checkout_create_failed"
           ? err.message
-          : 'Checkout could not be started. Please try again.';
+          : "Checkout could not be started. Please try again.";
       setErrorMessage(message);
       setIsSubmitting(false);
     }
@@ -101,7 +114,7 @@ export function BuyPage() {
         <h1 className="text-3xl font-semibold tracking-tight text-white">Buy</h1>
         <p className="text-slate-200/90">
           <span className="font-medium text-slate-100">{item.title}</span>
-            {item.priceText ? ` · ${item.priceText}` : ""}
+          {item.priceText ? ` · ${item.priceText}` : ""}
         </p>
       </header>
 
@@ -121,14 +134,21 @@ export function BuyPage() {
             <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-200/90">
               <li>You’ll receive a GitHub invite to a private repository within minutes after payment.</li>
               <li>
-                Support: <a className="underline underline-offset-4 hover:text-slate-100" href="mailto:support@zippers.dev">support@zippers.dev</a>
+                Support:{" "}
+                <button
+                  type="button"
+                  onClick={openCheckoutSupport}
+                  className="underline underline-offset-4 hover:text-slate-100"
+                >
+                  Contact support
+                </button>
               </li>
             </ul>
           </div>
         </div>
       </section>
 
-      {step === 'edit' ? (
+      {step === "edit" ? (
         <section className="mt-8">
           <label className="block text-sm font-medium text-slate-200" htmlFor="githubUsername">
             GitHub username
@@ -146,10 +166,10 @@ export function BuyPage() {
           <div className="mt-2 flex items-center justify-between gap-3">
             <p className="text-sm text-slate-200/80">
               {githubUsername.length === 0
-                ? 'We deliver via a GitHub invite, so the username must be exact.'
+                ? "We deliver via a GitHub invite, so the username must be exact."
                 : isGithubValid
-                  ? 'Looks valid.'
-                  : 'Invalid username format.'}
+                  ? "Looks valid."
+                  : "Invalid username format."}
             </p>
 
             {githubUsernameNormalized && isGithubValid ? (
@@ -174,7 +194,14 @@ export function BuyPage() {
               You’ll receive a GitHub invite to a private repository within minutes after payment.
             </p>
             <p className="mt-1 text-sm text-slate-200/90">
-              Support: <a className="underline underline-offset-4 hover:text-slate-100" href="mailto:support@zippers.dev">support@zippers.dev</a>
+              Support:{" "}
+              <button
+                type="button"
+                onClick={openCheckoutSupport}
+                className="underline underline-offset-4 hover:text-slate-100"
+              >
+                Contact support
+              </button>
             </p>
           </div>
 
@@ -253,7 +280,7 @@ export function BuyPage() {
               disabled={!canProceedToStripe}
               className="inline-flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isSubmitting ? 'Starting checkout…' : 'Proceed to Stripe Checkout'}
+              {isSubmitting ? "Starting checkout…" : "Proceed to Stripe Checkout"}
             </button>
 
             <button
@@ -264,12 +291,22 @@ export function BuyPage() {
               Edit username
             </button>
 
-            <Link
-              to="/products/safestate-recovery"
-              className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
-            >
-              Back to product page
-            </Link>
+            <div className="flex items-center justify-between">
+              <Link
+                to="/products/safestate-recovery"
+                className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
+              >
+                Back to product page
+              </Link>
+
+              <button
+                type="button"
+                onClick={openCheckoutSupport}
+                className="text-sm text-slate-200/80 underline underline-offset-4 hover:text-slate-100"
+              >
+                Contact support
+              </button>
+            </div>
           </div>
         </section>
       )}

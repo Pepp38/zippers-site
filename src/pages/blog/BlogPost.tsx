@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { getPostBySlug } from "../../blog/posts";
+import { BlogSignature } from "./BlogSignature";
 import "../../styles/blog.css";
 
 function formatDateLongEnUS(dateISO: string): string {
@@ -94,6 +95,8 @@ export function BlogPost() {
             className="blogContent"
             dangerouslySetInnerHTML={{ __html: post.contentHtml }}
           />
+          <BlogSignature />
+
         </div>
       </main>
     </div>

@@ -85,7 +85,6 @@ export const blogPosts: BlogPost[] = [
     "<h3>A quiet conclusion</h3>",
     "<p>Savior exists because data loss is common, frustrating, and almost always silent.</p>",
     "<p>If you have ever lost form data and quietly gave up, this is exactly why Savior exists.</p>",
-    "<p>Learn more at <strong>zippers.dev</strong>.</p>",
   ].join("\n"),
 },
 ];

@@ -452,24 +452,28 @@ export function SafeStateRecoveryPage() {
               </div>
             </div>
 
-            <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-              <p className="text-sm font-medium text-slate-200/90">$69 USD · one-time purchase</p>
+            <div className="mt-5 rounded-xl border border-emerald-300/20 bg-black/30 p-4">
+              <p className="text-base font-semibold text-white">
+                $69 USD
+                <span className="ml-2 text-sm font-normal text-slate-300">
+                  one-time purchase
+                </span>
+              </p>
               <p className="mt-1 text-xs text-slate-200/70">
-                Reliability guarantees, not best-effort recovery.
+                Pay once. Deterministic recovery guarantees.
               </p>
             </div>
 
-            <button
-              type="button"
-              disabled
-              className="mt-4 inline-flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-medium text-white opacity-60 cursor-not-allowed"
-            >
-              Finishing delivery flow
-            </button>
 
-            <p className="mt-2 text-xs text-slate-200/70">
-              Checkout temporarily paused while we harden delivery confirmation.
-            </p>
+            <div className="mt-4">
+              <Link
+                to="/buy/savior-safestate-recovery"
+                className="inline-flex w-full items-center justify-center rounded-xl border border-emerald-300/20 bg-emerald-400/10 px-4 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-emerald-400/15 focus:outline-none focus:ring-2 focus:ring-emerald-300/40"
+              >
+                Buy now
+              </Link>
+            </div>
+
           </div>
 
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5">

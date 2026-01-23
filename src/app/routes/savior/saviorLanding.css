@@ -196,6 +196,57 @@ body.savior-landing .trust span::before {
   margin-right: 0.4rem;
 }
 
+body.savior-landing .savior-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+body.savior-landing .hero-meta {
+  margin-top: 1.25rem;
+}
+
+body.savior-landing .savior-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+
+body.savior-landing .savior-badge__muted {
+  color: var(--muted-2);
+  font-weight: 500;
+}
+
+body.savior-landing .savior-badge--core {
+  border-color: rgba(46, 246, 86, 0.22);
+  box-shadow: 0 0 0 6px rgba(0, 215, 136, 0.06);
+}
+
+body.savior-landing .savior-badge--pro {
+  border-color: rgba(0, 180, 160, 0.22);
+}
+
+body.savior-landing .savior-badge--neutral {
+  background: transparent;
+}
+
+body.savior-landing .hero-meta {
+  margin-top: 1.1rem;
+}
+
+body.savior-landing .actions {
+  margin-top: 1.6rem;
+}
+
+
 /* ==========================================================================
    Sections
    ========================================================================== */
@@ -356,6 +407,12 @@ body.savior-landing .pill.no::before {
   content: "×";
   color: var(--danger);
   font-weight: 900;
+}
+
+/* Buy CTA spacing (SafeState product) */
+body.savior-landing .buy-cta {
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 /* ==========================================================================

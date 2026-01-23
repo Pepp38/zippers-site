@@ -212,38 +212,60 @@ export function SaviorLanding() {
         ]}
       />
 
-      <header className="savior-hero" id="savior-hero">
-        <div className="wrap">
-          <div className="hero">
-            <h1>
-              Stop losing <span>user input</span> to common failures.
-            </h1>
+<header className="savior-hero" id="savior-hero">
+  <div className="wrap">
+    <div className="hero">
+      <h1>
+        Stop losing <span>user input</span> to common failures.
+      </h1>
 
-            <p className="lead">
-              You already know the bug. A refresh, a crash, a tab closed too fast, and everything is
-              gone. Savior saves form input locally and restores it after common interruptions —
-              without a backend and without dependencies. Drop it in. Know what gets saved, and what
-              is intentionally ignored.
-            </p>
+      <p className="lead">
+        You already know the bug. A refresh, a crash, a tab closed too fast, and everything is gone.
+        Savior saves form input locally and restores it after common interruptions — without a backend
+        and without dependencies. Drop it in. Know what gets saved, and what is intentionally ignored.
+      </p>
 
-            <div className="actions">
-              <a className="primary" href={saviorContent.hero.ctaPrimary.href}>
-                {saviorContent.hero.ctaPrimary.label}
-              </a>
+      <div className="hero-meta">
+        <div className="savior-badges">
+          <span className="savior-badge savior-badge--core">
+            Savior Core <span className="savior-badge__muted">free · open source (MIT)</span>
+          </span>
 
-              <a className="secondary" href={githubUrl} target="_blank" rel="noreferrer">
-                {saviorContent.hero.ctaSecondary.label}
-              </a>
-            </div>
+          <span className="savior-badge savior-badge--pro">
+            SafeState Recovery <span className="savior-badge__muted">paid · optional</span>
+          </span>
 
-            <div className="trust">
-              <span>Dependency-free</span>
-              <span>Local-first</span>
-              <span>Works with any form</span>
-            </div>
-          </div>
+          <span className="savior-badge savior-badge--neutral">
+            Use either, or both
+          </span>
         </div>
-      </header>
+      </div>
+
+
+      <div className="actions">
+        <a className="primary" href={saviorContent.hero.ctaPrimary.href}>
+          {saviorContent.hero.ctaPrimary.label}
+        </a>
+
+        <a
+          className="secondary"
+          href={githubUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {saviorContent.hero.ctaSecondary.label}
+        </a>
+      </div>
+
+      <div className="trust">
+        <span>Open-source core (MIT)</span>
+        <span>Optional paid recovery</span>
+        <span>Local-first</span>
+        <span>No backend</span>
+      </div>
+    </div>
+  </div>
+</header>
 
       <main>
         <section id="try">

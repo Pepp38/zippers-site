@@ -1,5 +1,5 @@
 /* =========================================
-   Zippers Blog CSS (clean)
+   Zippers Blog CSS
    - Readability-first (HN / senior dev friendly)
    - Minimal, editorial, calm
 ========================================= */
@@ -78,10 +78,63 @@
   height: 140px;
   display: grid;
   place-items: center;
+  position: relative;
 }
 
 .blogBrandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--blog-dark-text);
   text-decoration: none;
+}
+
+.blogBrandMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.blogBrandText {
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.blogMeta {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--blog-dark-muted);
+}
+
+.blogIndexTop {
+  width: min(var(--blog-article-width), 100%);
+  padding: 0 18px;
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: flex-start;
+}
+
+.blogIndexBack {
+  color: var(--blog-dark-text);
+  text-decoration: none;
+  font-size: 13px;
+  opacity: 0.82;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  padding-bottom: 2px;
+}
+
+.blogIndexBack:hover {
+  opacity: 0.95;
+  border-bottom-color: rgba(var(--savior-primary-rgb), 0.45);
 }
 
 .blogLogo {
@@ -325,8 +378,26 @@
 }
 
 .blogLibraryItem {
-  padding: 18px 0;
   border-bottom: 1px solid var(--blog-light-border);
+}
+
+/* Whole row is clickable */
+.blogLibraryRowLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 18px 12px;
+  margin: 0 -12px;
+}
+
+.blogLibraryRowLink:hover {
+  background: rgba(17, 24, 39, 0.03);
+}
+
+.blogLibraryRowLink:focus-visible {
+  outline: 2px solid rgba(var(--savior-primary-rgb), 0.35);
+  outline-offset: 2px;
 }
 
 .blogLibraryRow {
@@ -343,6 +414,13 @@
   font-size: 18px;
   font-weight: 650;
   margin: 0 0 6px;
+  line-height: 1.25;
+}
+
+.blogLibraryRowLink:hover .blogLibraryTitle {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
 .blogLibraryMeta {
@@ -354,6 +432,7 @@
 .blogLibraryExcerpt {
   margin: 0;
   color: var(--blog-light-muted);
+  max-width: 66ch;
 }
 
 .blogLibraryRight {
@@ -362,17 +441,19 @@
   padding-top: 2px;
 }
 
+/* "Read" is a cue, not a link */
 .blogLibraryRead {
   color: inherit;
-  text-decoration: none;
   border-bottom: 1px solid var(--blog-light-border);
   font-size: 13px;
   padding-bottom: 2px;
   white-space: nowrap;
+  opacity: 0.9;
 }
 
-.blogLibraryRead:hover {
-  opacity: 0.85;
+.blogLibraryRowLink:hover .blogLibraryRead {
+  opacity: 1;
+  border-bottom-color: rgba(var(--savior-primary-rgb), 0.45);
 }
 
 /* =========================================
@@ -382,6 +463,10 @@
 @media (max-width: 520px) {
   .blogHeader {
     height: 120px;
+  }
+
+  .blogIndexTop {
+    top: 14px;
   }
 
   .blogArticle {
@@ -395,6 +480,11 @@
 
   .blogH1 {
     font-size: 32px;
+  }
+
+  .blogLibraryRowLink {
+    padding: 16px 10px;
+    margin: 0 -10px;
   }
 
   .blogLibraryRow {

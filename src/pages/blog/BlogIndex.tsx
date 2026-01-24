@@ -16,6 +16,9 @@ export function BlogIndex() {
 
   return (
     <div className="blogShell">
+      {/* -------------------------------------
+         Header
+      ------------------------------------- */}
       <header className="blogHeader">
         <div className="blogIndexTop">
           <Link className="blogIndexBack" to="/">
@@ -25,7 +28,6 @@ export function BlogIndex() {
 
         <Link className="blogBrandLink" to="/blog">
           <span className="blogBrandMark" aria-hidden>
-            {/* Temporary inline brand mark (replace later) */}
             <svg
               width="18"
               height="18"
@@ -46,33 +48,58 @@ export function BlogIndex() {
               />
             </svg>
           </span>
+
           <span className="blogBrandText">Zippers Blog</span>
         </Link>
 
-        <div className="blogMeta">A quiet library of long-form notes.</div>
+        <div className="blogMeta">
+          A quiet library of long-form notes.
+        </div>
       </header>
 
       <div className="blogDivider" />
 
+      {/* -------------------------------------
+         Main
+      ------------------------------------- */}
       <main className="blogMain">
         <div className="blogLibrary">
           <ul className="blogLibraryList">
-            {posts.map((p) => (
-              <li key={p.slug} className="blogLibraryItem">
-                <div className="blogLibraryRow">
-                  <div className="blogLibraryLeft">
-                    <div className="blogLibraryTitle">{p.title}</div>
-                    <div className="blogLibraryMeta">{formatDate(p.dateISO)}</div>
-                    <p className="blogLibraryExcerpt">{p.excerpt}</p>
-                  </div>
-                  <div className="blogLibraryRight">
-                    <Link className="blogLibraryRead" to={`/blog/${p.slug}`}>
-                      Read
-                    </Link>
-                  </div>
-                </div>
-              </li>
-            ))}
+            {posts.map((post) => {
+              const postUrl = `/blog/${post.slug}`;
+
+              return (
+                <li key={post.slug} className="blogLibraryItem">
+                  <Link
+                    to={postUrl}
+                    className="blogLibraryRowLink"
+                    aria-label={`Read: ${post.title}`}
+                  >
+                    <div className="blogLibraryRow">
+                      <div className="blogLibraryLeft">
+                        <div className="blogLibraryTitle">
+                          {post.title}
+                        </div>
+
+                        <div className="blogLibraryMeta">
+                          {formatDate(post.dateISO)}
+                        </div>
+
+                        <p className="blogLibraryExcerpt">
+                          {post.excerpt}
+                        </p>
+                      </div>
+
+                      <div className="blogLibraryRight">
+                        <span className="blogLibraryRead">
+                          Read
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </main>

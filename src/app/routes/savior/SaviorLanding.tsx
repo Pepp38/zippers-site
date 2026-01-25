@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
 import { LandingFooter } from '../../../components/layout/LandingFooter';
 import { LandingHeader } from '../../../components/layout/LandingHeader';
 import { saviorContent } from '../../../content/savior';
@@ -266,6 +265,14 @@ export function SaviorLanding() {
     </div>
   </div>
 </header>
+
+<section>
+  <h2>Understanding the problem</h2>
+  <p>
+    <Link to="/concepts/silent-data-loss">Silent data loss</Link>
+  </p>
+</section>
+
 
       <main>
         <section id="try">

@@ -8,6 +8,9 @@ import { BlogPost } from "./pages/blog/BlogPost";
 import { SaviorShell } from "./app/layout/SaviorShell";
 import { SafeStateRecoveryPage } from "./app/routes/products/SafeStateRecoveryPage";
 import { SupportModal } from "./components/support/SupportModal";
+import { ConceptPage } from "./app/routes/concepts/ConceptPage";
+
+
 
 export default function App() {
   return (
@@ -31,6 +34,10 @@ export default function App() {
         <Route path="/blog" element={<BlogIndex />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
 
+        {/* Concepts */}
+        <Route path="/concepts/:slug" element={<ConceptPage />} />
+
+        {/* Fallback */}  
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 

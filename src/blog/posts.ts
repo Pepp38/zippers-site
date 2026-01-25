@@ -66,6 +66,7 @@ export const blogPosts: BlogPost[] = [
       "<li>Partial fixes that do not reflect real usage patterns, especially on mobile</li>",
       "</ul>",
       "<p>Yet form data loss is still happening. Frequently. Silently.</p>",
+      "<p>Learn more about this issue in the <a href=\"/concepts/silent-data-loss\">Silent Data Loss</a> concept page.</p>",
 
       "<h2>A very ordinary failure</h2>",
       "<p>A few weeks ago, I was filling out a survey for a major Canadian airline on my iPhone. It was not a short form. After about five minutes, the interface showed I was roughly 25% done.</p>",

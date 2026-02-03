@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { getSolutionBySlug } from "../../../content/solutions/solutions";
+import { MarkdownFrame } from "../../../components/MarkdownFrame";
 import "../../../styles/blog.css";
 
 export function SolutionPage() {
@@ -33,10 +34,9 @@ export function SolutionPage() {
 
       <main className="blogMain">
         <div className="blogArticle">
-          <article
-            className="blogContent"
-            dangerouslySetInnerHTML={{ __html: solution.contentHtml }}
-          />
+          <MarkdownFrame>
+            <div dangerouslySetInnerHTML={{ __html: solution.contentHtml }} />
+          </MarkdownFrame>
         </div>
       </main>
     </div>

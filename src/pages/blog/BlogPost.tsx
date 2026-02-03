@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { getPostBySlug } from "../../blog/posts";
 import { BlogSignature } from "./BlogSignature";
 import "../../styles/blog.css";
+import { MarkdownFrame } from "../../components/MarkdownFrame";
 
 function formatDateLongEnUS(dateISO: string): string {
   const dt = new Date(`${dateISO}T00:00:00`);
@@ -91,10 +92,9 @@ export function BlogPost() {
             </footer>
           </blockquote>
 
-          <article
-            className="blogContent"
-            dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-          />
+          <MarkdownFrame className="blogContent">
+            <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+          </MarkdownFrame>
           <BlogSignature />
 
         </div>

@@ -1,6 +1,12 @@
-// src/components/MarkdownFrame.tsx
-import "../styles/github-markdown.css";
+import type { ReactNode } from "react";
+import "../styles/markdown-body.css";
 
-export function MarkdownFrame({ children }: { children: React.ReactNode }) {
-  return <article className="markdown-body">{children}</article>;
+type MarkdownFrameProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+export function MarkdownFrame({ children, className }: MarkdownFrameProps) {
+  const cls = className ? `markdown-body ${className}` : "markdown-body";
+  return <article className={cls}>{children}</article>;
 }

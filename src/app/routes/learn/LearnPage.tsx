@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import "../../../styles/blog.css";
 import { solutionDocs } from "../../../content/solutions/solutions";
 import { conceptDocs } from "../../../content/concepts/concepts";
+import { getLatestBlogEntries } from "../../../content/blog/blog";
+
 
 type HubCard = {
   title: string;
@@ -21,13 +23,11 @@ export function LearnPage() {
     href: `/concepts/${c.slug}`,
   }));
 
-  // Blog: on pointe vers les 3 posts déjà publiés.
-  // Tu pourras remplacer ça par un registry plus tard.
-  const latestBlog = [
-    { title: "Why Savior exists", href: "/blog/why-savior-exists" },
-    { title: "Building reliability tools in public", href: "/blog/building-in-public" },
-    { title: "What modern UX silently breaks", href: "/blog/ux-silent-failures" },
-  ];
+  const latestBlog = getLatestBlogEntries(3).map((b) => ({
+    title: b.title,
+    href: `/blog/${b.slug}`,
+  }));
+
 
   const cards: HubCard[] = [
     {

@@ -1,18 +1,26 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+
+import { SaviorShell } from "./app/layout/SaviorShell";
 import { SaviorLanding } from "./app/routes/savior/SaviorLanding";
+
 import { BuyPage } from "./app/routes/buy/BuyPage";
 import { BuySuccessPage } from "./app/routes/buy/BuySuccessPage";
 import { BuyCancelPage } from "./app/routes/buy/BuyCancelPage";
-import { BlogIndex } from "./pages/blog/BlogIndex";
-import { BlogPost } from "./pages/blog/BlogPost";
-import { SaviorShell } from "./app/layout/SaviorShell";
+
 import { SafeStateRecoveryPage } from "./app/routes/products/SafeStateRecoveryPage";
-import { SupportModal } from "./components/support/SupportModal";
+
+import { LearnPage } from "./app/routes/learn/LearnPage";
+import { SolutionsIndex } from "./app/routes/solutions/SolutionsIndex";
+import { SolutionPage } from "./app/routes/solutions/SolutionPage";
+import { ConceptIndex } from "./app/routes/concepts/ConceptIndex";
 import { ConceptPage } from "./app/routes/concepts/ConceptPage";
+
 import { UndoAiLanding } from "./app/routes/undo-ai/UndoAiLanding";
 
+import { BlogIndex } from "./pages/blog/BlogIndex";
+import { BlogPost } from "./pages/blog/BlogPost";
 
-
+import { SupportModal } from "./components/support/SupportModal";
 
 export default function App() {
   return (
@@ -27,7 +35,10 @@ export default function App() {
           <Route path="/undo-ai" element={<UndoAiLanding />} />
 
           {/* Products */}
-          <Route path="/products/safestate-recovery" element={<SafeStateRecoveryPage />} />
+          <Route
+            path="/products/safestate-recovery"
+            element={<SafeStateRecoveryPage />}
+          />
 
           {/* Buy flow */}
           <Route path="/buy/:sku" element={<BuyPage />} />
@@ -35,14 +46,22 @@ export default function App() {
           <Route path="/buy/:sku/cancel" element={<BuyCancelPage />} />
         </Route>
 
+        {/* Learn hub */}
+        <Route path="/learn" element={<LearnPage />} />
+
+        {/* Solutions */}
+        <Route path="/solutions" element={<SolutionsIndex />} />
+        <Route path="/solutions/:slug" element={<SolutionPage />} />
+
+        {/* Concepts */}
+        <Route path="/concepts" element={<ConceptIndex />} />
+        <Route path="/concepts/:slug" element={<ConceptPage />} />
+
         {/* Blog */}
         <Route path="/blog" element={<BlogIndex />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
 
-        {/* Concepts */}
-        <Route path="/concepts/:slug" element={<ConceptPage />} />
-
-        {/* Fallback */}  
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 

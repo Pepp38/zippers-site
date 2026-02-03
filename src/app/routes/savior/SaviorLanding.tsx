@@ -207,7 +207,7 @@ export function SaviorLanding() {
           { label: 'Coverage', href: '#coverage' },
           { label: 'Install', href: '#install' },
           { label: 'SafeState Recovery', href: '/products/safestate-recovery' },
-          { label: 'Blog', href: '/blog' },
+          { label: 'Learn', href: '/learn' },
         ]}
       />
 

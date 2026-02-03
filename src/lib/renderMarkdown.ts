@@ -1,6 +1,4 @@
-// src/lib/renderMarkdown.ts
 import MarkdownIt from "markdown-it";
-import matter from "gray-matter";
 
 const md = new MarkdownIt({
   html: false,
@@ -8,13 +6,20 @@ const md = new MarkdownIt({
   typographer: true,
 });
 
-export function renderMarkdownToHtml(rawMd: string): {
-  frontmatter: Record<string, any>;
+/**
+ * Render markdown to HTML.
+ * - Removes YAML frontmatter if present
+ * - Browser-safe (no Node APIs)
+ */
+export function renderMarkdownToHtml(source: string): {
   html: string;
 } {
-  const parsed = matter(rawMd);
-  return {
-    frontmatter: parsed.data,
-    html: md.render(parsed.content),
-  };
+  const withoutFrontmatter = source.replace(
+    /^---[\s\S]*?---\s*/m,
+    ""
+  );
+
+  const html = md.render(withoutFrontmatter);
+
+  return { html };
 }

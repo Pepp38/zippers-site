@@ -37,6 +37,7 @@ The absence of feedback creates a structural blind spot where loss events leave 
 - Tab closure or background eviction  
 - Network interruptions during client-side interaction  
 - Client-side state not persisted across reloads  
+- Previously persisted state restored in an invalid or incomplete form  
 
 ---
 
@@ -88,6 +89,7 @@ It complements existing application architecture by covering in-progress user in
 
 ## 9. Related concepts
 
+- [Safe State Recovery](/concepts/safe-state-recovery)  
 - Fail-soft systems  
 - Recovery-first design  
 - User-facing failures  

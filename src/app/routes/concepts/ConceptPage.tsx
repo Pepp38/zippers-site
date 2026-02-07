@@ -1,8 +1,9 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { getConceptBySlug } from "../../../content/concepts/concepts";
-import "../../../styles/blog.css"; // optionnel: réutiliser la typo/rythme du blog
+import "../../../styles/blog.css";
 
 export function ConceptPage() {
+  const navigate = useNavigate();
   const { slug } = useParams<{ slug: string }>();
   const concept = slug ? getConceptBySlug(slug) : undefined;
 
@@ -35,6 +36,20 @@ export function ConceptPage() {
         <div className="blogArticle">
           <article
             className="blogContent"
+            onClick={(e) => {
+              const target = e.target as HTMLElement;
+              const anchor = target.closest("a") as HTMLAnchorElement | null;
+              if (!anchor) return;
+
+              const href = anchor.getAttribute("href");
+              if (!href) return;
+
+              // internal SPA navigation
+              if (href.startsWith("/")) {
+                e.preventDefault();
+                navigate(href);
+              }
+            }}
             dangerouslySetInnerHTML={{ __html: concept.contentHtml }}
           />
         </div>

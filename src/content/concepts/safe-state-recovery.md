@@ -215,6 +215,5 @@ They solve different problems and operate at different layers.
 
 ## Further reading
 
-- Silent Data Loss  
-- State persistence vs recovery  
-- Client-side failure modes  
+- [Silent Data Loss](/concepts/silent-data-loss)
+

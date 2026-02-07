@@ -1,5 +1,6 @@
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { getConceptBySlug } from "../../../content/concepts/concepts";
+import { handleSpaLinkClick } from "../../../lib/spaLinks";
 import "../../../styles/blog.css";
 
 export function ConceptPage() {
@@ -36,20 +37,7 @@ export function ConceptPage() {
         <div className="blogArticle">
           <article
             className="blogContent"
-            onClick={(e) => {
-              const target = e.target as HTMLElement;
-              const anchor = target.closest("a") as HTMLAnchorElement | null;
-              if (!anchor) return;
-
-              const href = anchor.getAttribute("href");
-              if (!href) return;
-
-              // internal SPA navigation
-              if (href.startsWith("/")) {
-                e.preventDefault();
-                navigate(href);
-              }
-            }}
+            onClick={(e) => handleSpaLinkClick(e, navigate)}
             dangerouslySetInnerHTML={{ __html: concept.contentHtml }}
           />
         </div>

@@ -1,4 +1,6 @@
 import silentDataLossMd from "./silent-data-loss.md?raw";
+import safeStateRecoveryMd from "./safe-state-recovery.md?raw";
+
 
 export type ConceptDoc = {
   slug: string;
@@ -106,6 +108,11 @@ export const conceptDocs: ConceptDoc[] = [
     slug: "silent-data-loss",
     title: "Silent Data Loss",
     contentHtml: renderConceptMarkdownToHtml(silentDataLossMd),
+  },
+  {
+    slug: "safe-state-recovery",
+    title: "Safe State Recovery",
+    contentHtml: renderConceptMarkdownToHtml(safeStateRecoveryMd),
   },
 ];
 

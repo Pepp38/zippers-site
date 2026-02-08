@@ -10,7 +10,13 @@ export const blogEntries: BlogEntry[] = [
     title: "Why Savior Exists",
     dateISO: "2026-01-10",
   },
+  {
+    slug: "why-savior-safestate-recovery-exists",
+    title: "Why Savior SafeState Recovery Exists",
+    dateISO: "2026-02-07",
+  },
 ];
+
 
 export function getLatestBlogEntries(limit = 3): BlogEntry[] {
   return [...blogEntries]
